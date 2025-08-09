@@ -1,0 +1,15 @@
+{
+ "extends": "../tsconfig-base.json",
+ "compilerOptions": {
+ "outDir": "../dist/111.solid",
+ "composite": true,
+ "skipLibCheck": true
+ },
+ "include": [
+ "**/*"
+ ],
+ "exclude": [
+ "**/node_modules"
+ ]
+}
+

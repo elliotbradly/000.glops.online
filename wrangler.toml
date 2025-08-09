@@ -1,0 +1,9 @@
+name = "my-worker"
+main = "src/index.ts"
+compatibility_date = "2023-10-30"
+
+# Define the variable here
+[vars]
+TARGET_ENVIRONMENT = "staging" # Change this to "staging" to switch the URL
+PRODUCTION = "https://zero01-alligator-quest.onrender.com/api/"
+STAGING = "http://localhost:3005/api/"
