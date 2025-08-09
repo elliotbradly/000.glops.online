@@ -71,7 +71,6 @@ export const updateMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
     ActMnu.TIME_MENU,
     ActMnu.SPACE_MENU,
     ActMnu.SOWER_MENU,
-    ActMnu.MARKET_MENU,
     ActLib.ASTRO_LIBRARY,
     ActLib.COUNT_LIBRARY, ActUnt.UPDATE_UNIT, ActAct.UPDATE_ACTION, ActUnt.CREATE_UNIT, ActLib.UPDATE_LIBRARY, ActLib.LIST_LIBRARY]
 
@@ -241,10 +240,6 @@ export const updateMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
       bit = await ste.hunt(ActMnu.EARTH_MENU, {})
       break;
 
-    case ActMnu.MARKET_MENU:
-      bit = await ste.hunt(ActMnu.MARKET_MENU, {})
-      break;
-
     case ActLib.UPDATE_LIBRARY:
       ste.hunt(ActCns.UPDATE_CONSOLE, { idx: 'cns00', src: "Update Library Pivot" })
       bit = await ste.hunt(ActLib.UPDATE_LIBRARY, {})
@@ -304,5 +299,3 @@ export const printMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
 };
 
 var patch = (ste, type, bale) => ste.dispatch({ type, bale });
-
-
