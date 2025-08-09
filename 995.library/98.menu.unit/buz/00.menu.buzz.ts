@@ -50,7 +50,7 @@ export const initMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
   bit = await ste.hunt(ActCns.WRITE_CONSOLE, { idx: 'cns00', src: "", dat: { net: bit.grdBit.dat, src: "alligaor0" } })
 
   bit = await ste.hunt(ActCns.UPDATE_CONSOLE, { idx: 'cns00', src: "-----------" })
-  bit = await ste.hunt(ActCns.UPDATE_CONSOLE, { idx: 'cns00', src: "Library PIVOT V0" })
+  bit = await ste.hunt(ActCns.UPDATE_CONSOLE, { idx: 'cns00', src: "GLOPS.ONLINE  V0.0.0" })
   bit = await ste.hunt(ActCns.UPDATE_CONSOLE, { idx: 'cns00', src: "-----------" })
 
   updateMenu(cpy, bal, ste);

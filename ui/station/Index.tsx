@@ -66,13 +66,13 @@ const Test = () => {
       </Text>
 
 
-      <Center maw={1920} h={1080} bg="var(--mantine-color-green-light)">
+      <Center maw={640} h={480} bg="var(--mantine-color-green-light)">
         <Box bg="var(--mantine-color-red-light)">
 
 
           <Box style={{
-            width: '1920px',
-            height: '1080px',
+            width: '640px',
+            height: '480px',
             position: 'relative',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
