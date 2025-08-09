@@ -36,9 +36,6 @@ export function reducer(model: MenuModel = new MenuModel(), act: Act.Actions, st
     case Act.SOWER_MENU:
       return Buzz.sowerMenu(clone(model), act.bale, state);
 
-    case Act.MARKET_MENU:
-      return Buzz.marketMenu(clone(model), act.bale, state);
-
     case Act.TIME_MENU:
       return Buzz.timeMenu(clone(model), act.bale, state);
 
