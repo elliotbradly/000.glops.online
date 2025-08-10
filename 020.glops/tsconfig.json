@@ -1,0 +1,14 @@
+{
+ "extends": "../tsconfig-base.json",
+ "compilerOptions": {
+ "outDir": "../dist/000.glops",
+ "composite": true,
+ "skipLibCheck": true
+ },
+ "include": [
+ "**/*"
+, "../wpapi.js" ],
+ "exclude": [
+ "**/node_modules"
+ ]
+}
