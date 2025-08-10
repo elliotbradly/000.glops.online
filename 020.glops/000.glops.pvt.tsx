@@ -46,6 +46,6 @@ var init = () => {
 };
 
 
-export const space = async (typ, obj) => {
+export const glops = async (typ, obj) => {
   return sim.hunt(typ, obj)
 }

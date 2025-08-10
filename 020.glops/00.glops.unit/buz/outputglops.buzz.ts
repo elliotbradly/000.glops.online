@@ -16,7 +16,7 @@ import * as Increment from '../../val/increment'
 
 var bit
 
-export const outputglops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+export const outputGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
 
     var output = { dex: 0, now: null, map:null, focus:null, colorListSize: 0 };
     output.dex = cpy.dex
