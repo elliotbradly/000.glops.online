@@ -15,3 +15,5 @@ dist/
 /*.env
 /public/process
 /.wrangler
+*.js
+*.js.map

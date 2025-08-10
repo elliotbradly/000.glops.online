@@ -65,6 +65,7 @@ export const updateMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
     ActDif.UPDATE_DIFFUSION,
     ActSrv.UPDATE_SERVER,
     ActMnu.EARTH_MENU,
+    ActMnu.GLOPS_MENU,
     ActDat.FRAME_DATA,
     ActMnu.OLLAMA_MENU,
     ActMnu.CONTROL_MENU,
@@ -238,6 +239,10 @@ export const updateMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
 
     case ActMnu.EARTH_MENU:
       bit = await ste.hunt(ActMnu.EARTH_MENU, {})
+      break;
+
+    case ActMnu.GLOPS_MENU:
+      bit = await ste.hunt(ActMnu.GLOPS_MENU, {})
       break;
 
     case ActLib.UPDATE_LIBRARY:
