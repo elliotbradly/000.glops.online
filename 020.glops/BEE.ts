@@ -45,6 +45,7 @@ bus : reduceFromBus.reducer,
 export default class UnitData implements Model {
 
 
+
  glops : Glops = new GlopsModel();
 
  world : World = new WorldModel();

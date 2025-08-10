@@ -19,7 +19,9 @@ import * as Increment from '../../val/increment'
 var bit
 
 
+
 export const openGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
 
 
     if (cpy.opened == 1) {

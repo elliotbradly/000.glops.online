@@ -20,7 +20,9 @@ import * as Increment from '../../val/increment'
 var bit
 
 
+
 export const accessGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
 
 
   cpy.access = bal.val
