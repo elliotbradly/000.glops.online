@@ -17,7 +17,9 @@ import * as Increment from '../../val/increment'
 
 var bit, dat
 
-export const updateglops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
+export const updateGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
 
 
     if (cpy.opened == 0) bit = await ste.hunt(ActEth.OPEN_GLOPS, {})

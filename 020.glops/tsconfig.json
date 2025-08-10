@@ -1,7 +1,9 @@
 {
  "extends": "../tsconfig-base.json",
  "compilerOptions": {
- "outDir": "../dist/000.glops",
+
+ "outDir": "../dist/020.glops",
+
  "composite": true,
  "skipLibCheck": true
  },
