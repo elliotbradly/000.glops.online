@@ -18,6 +18,36 @@ export const initFormGlop = async (cpy: FormGlopModel, bal: FormGlopBit, ste: St
 
 
 export const updateFormGlop = async (cpy: FormGlopModel, bal: FormGlopBit, ste: State) => {
+
+    const baseModuleYield = bal.baseModuleYield || 0;
+    const miningLvl = bal.miningLvl || 0;
+    const astrogeologyLvl = bal.astrogeologyLvl || 0;
+    const shipBonus = bal.shipBonus || 0;
+    const crystalBonus = bal.crystalBonus || 0;
+    const fleetBoostBonus = bal.fleetBoostBonus || 0;
+    const implantBonus = bal.implantBonus || 0;
+    const cycleTime = bal.cycleTime || 1;
+
+    const skillBonus = (1 + miningLvl * 0.05) * (1 + astrogeologyLvl * 0.05);
+
+    const finalYieldPerCycle =
+        baseModuleYield *
+        skillBonus *
+        (1 + shipBonus) *
+        (1 + crystalBonus) *
+        (1 + fleetBoostBonus) *
+        (1 + implantBonus);
+
+    const yieldPerSecond = finalYieldPerCycle / cycleTime;
+
+    bal.dat = {
+        yield: yieldPerSecond,
+        yieldPerCycle: finalYieldPerCycle,
+        cycleTime: cycleTime
+    };
+
+    if (bal.slv != null) bal.slv({ fgpBit: { idx: "update-formGlop", dat: bal.dat } });
+
     return cpy;
 };
 
