@@ -17746,6 +17746,2796 @@ export const MOUNT_FULL: string = "mount-visage-full";
 export const MOUNT_PART: string = "mount-visage-part";
 export const MOUNT_HEIGHT: string = "mount-visage-height";
 export const MOUNT_WIDTH: string = "mount-visage-width";
+import * as ActErt from '../glops.action'
+import { GlopsModel } from "../glops.model";
+import glopsBit from "../fce/glops.bit";
+import State from "../../99.core/state";
+
+import * as ActSpk from '../../act/spark.action'
+import * as ActTme from '../../act/time.action'
+
+import * as ActClk from '../../act/clock.action'
+import * as ActInc from '../../act/increment.action'
+import * as ActMap from "../../act/hexmap.action";
+import * as ActFoc from "../../act/focus.action";
+
+import * as ActPrg from "../../act/progress.action";
+
+import * as PVT from '../../val/pivot'
+
+import * as Increment from '../../val/increment'
+
+var bit
+
+
+export const accessGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
+
+  cpy.access = bal.val
+
+  cpy.lastUpdateTimeLong = 0;
+  cpy.deltaHoldLong = 0;
+
+  cpy.lastUpdateTimeShort = 0;
+  cpy.deltaHoldShort = 0;
+
+  cpy.shortValue = cpy.maxShort
+
+  cpy.tinyCount = 0;
+
+  cpy.delayUntil = Date.now() + 100;
+
+  bit = await ste.hunt(ActErt.UPDATE_GLOPS, {})
+
+  bal.slv({ ertBit: { idx: "access-glops", val: cpy.access, dat: {} } });
+
+  return cpy;
+};
+
+import { GlopsModel } from "../glops.model";
+import glopsBit from "../fce/glops.bit";
+import State from "../../99.core/state";
+
+import * as ActSpk from '../../act/spark.action'
+import * as ActTme from '../../act/time.action'
+
+import * as ActClk from '../../act/clock.action'
+import * as ActInc from '../../act/increment.action'
+import * as ActMap from "../../act/hexmap.action";
+import * as ActFoc from "../../act/focus.action";
+
+import * as ActPrg from "../../act/progress.action";
+
+import * as PVT from '../../val/pivot'
+
+import * as Increment from '../../val/increment'
+
+var bit
+
+
+export const advanceGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
+
+    cpy.dex += 1;
+
+
+    bit = await window['TIME'](ActPrg.UPDATE_PROGRESS, { idx: cpy.idxInc, src: cpy.idxClk });
+
+
+
+
+  bal.slv({ ertBit: { idx: "advance-glops" } });
+
+    return cpy;
+};
+
+
+import { GlopsModel } from "../glops.model";
+import glopsBit from "../fce/glops.bit";
+import State from "../../99.core/state";
+
+export const initglops = (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
+    bal.slv({ intBit: { idx: "init-glops", dat: { src: 'genesis' } } });
+
+    return cpy;
+};
+
+import { GlopsModel } from "../glops.model";
+import glopsBit from "../fce/glops.bit";
+import State from "../../99.core/state";
+
+import * as ActSpk from '../../act/spark.action'
+import * as ActTme from '../../act/time.action'
+
+import * as ActClk from '../../act/clock.action'
+import * as ActClr from '../../act/color.action'
+
+import * as ActInc from '../../act/increment.action'
+import * as ActMap from "../../act/hexmap.action";
+import * as ActFoc from "../../act/focus.action";
+
+import * as PVT from '../../val/pivot'
+
+import * as Increment from '../../val/increment'
+
+var bit
+
+
+export const openGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
+
+    if (cpy.opened == 1) {
+        bal.slv({ ertBit: { idx: "open-glops", dat: { val: cpy.opened } } });
+        return cpy
+    }
+
+
+    cpy.opened = 1
+
+    cpy.idxClk = 'clk00'
+    cpy.idxInc = 'inc00'
+
+    var clk = { day: 0, hrs: 0, min: 0, mth: 0, sec: 0, yrs: 1822 }
+
+    bit = await window[PVT.TIME](ActClk.WRITE_CLOCK, { idx: cpy.idxClk, clk })
+
+    var incDft = { day: 0, hrs: 0, min: 0, mth: 0, sec: 6, yrs: 0 }
+
+    var incHrs = { day: 0, hrs: 1, min: 0, mth: 0, sec: 0, yrs: 0 }
+    var incMin = { day: 0, hrs: 0, min: 1, mth: 0, sec: 0, yrs: 0 }
+    var incDay = { day: 0, hrs: 16, min: 0, mth: 0, sec: 0, yrs: 0 }
+    var incSec = { day: 0, hrs: 0, min: 0, mth: 0, sec: 1, yrs: 0 }
+
+    bit = await window[PVT.TIME](ActInc.WRITE_INCREMENT, { idx: Increment.DEFAULT, inc: incDft })
+
+    bit = await window[PVT.TIME](ActInc.WRITE_INCREMENT, { idx: Increment.HOURS, inc: incHrs })
+    bit = await window[PVT.TIME](ActInc.WRITE_INCREMENT, { idx: Increment.MINUTES, inc: incMin })
+    bit = await window[PVT.TIME](ActInc.WRITE_INCREMENT, { idx: Increment.DAYS, inc: incDay })
+    bit = await window[PVT.TIME](ActInc.WRITE_INCREMENT, { idx: Increment.SECONDS, inc: incSec })
+
+    bit = await window[PVT.TIME](ActTme.RANDOM_TIME, { idx: 'clk00' })
+
+    //ste.hunt(ActCtl.INCREMENT_CONTROL, { src: Increment.DEFAULT })
+
+    bit = await window[PVT.SPACE](ActMap.WRITE_HEXMAP, { idx: 'map00' })
+    var map = bit.mapBit.dat.bit
+
+    bit = await window[PVT.SPACE](ActFoc.WRITE_FOCUS, { idx: 'foc00', src: 'map00' })
+    var focus = bit.focBit.dat
+
+    //var FS = require('fs-extra')
+
+    //var lst = FS.readJsonSync('./public/data/color/000.color.name.json')
+    //bit = await window[PVT.SOWER](ActClr.OPEN_COLOR, { lst })
+
+    //bit = await window[PVT.SOWER](ActSpk.WRITE_SPARK, { idx: 'spk00' })
+
+    bal.slv({ ertBit: { idx: "open-glops", dat: { val: cpy.opened } } });
+
+    return cpy;
+};
+
+import { GlopsModel } from "../glops.model";
+import glopsBit from "../fce/glops.bit";
+import State from "../../99.core/state";
+
+import * as ActSpk from '../../act/spark.action'
+import * as ActTme from '../../act/time.action'
+
+import * as ActClk from '../../act/clock.action'
+import * as ActInc from '../../act/increment.action'
+import * as ActMap from "../../act/hexmap.action";
+import * as ActFoc from "../../act/focus.action";
+
+import * as PVT from '../../val/pivot'
+
+import * as Increment from '../../val/increment'
+
+var bit
+
+
+export const outputGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
+
+    var output = { dex: 0, now: null, map:null, focus:null, colorListSize: 0 };
+    output.dex = cpy.dex
+
+    bit = await window['TIME'](ActClk.READ_CLOCK, { idx: cpy.idxClk })
+
+    output.now = bit.clkBit.dat
+
+    bit = await window['SPACE'](ActMap.READ_HEXMAP, { idx: 'map00' })
+    output.map = bit.mapBit.dat.bit
+
+
+    bit = await window['SPACE'](ActFoc.READ_FOCUS, { idx: 'foc00', src: 'map00' })
+    output.focus = bit.focBit.dat
+
+    bal.slv({ ertBit: { idx: "output-glops", dat: output, val: cpy.opened } });
+
+    return cpy;
+};
+
+import * as ActEth from "../glops.action";
+import { GlopsModel } from "../glops.model";
+import glopsBit from "../fce/glops.bit";
+import State from "../../99.core/state";
+
+import * as ActSpk from '../../act/spark.action'
+import * as ActTme from '../../act/time.action'
+
+import * as ActClk from '../../act/clock.action'
+import * as ActInc from '../../act/increment.action'
+import * as ActMap from "../../act/hexmap.action";
+import * as ActFoc from "../../act/focus.action";
+
+import * as PVT from '../../val/pivot'
+
+import * as Increment from '../../val/increment'
+
+var bit, dat
+
+
+export const updateGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
+
+
+    if (cpy.opened == 0) bit = await ste.hunt(ActEth.OPEN_GLOPS, {})
+
+    // 1. Handle manual override first for immediate action.
+    //if (bal.val === 1) {
+    //    bit = await ste.hunt(ActEth.ADVANCE_GLOPS, {})
+    //    bit = await ste.hunt(ActEth.OUTPUT_GLOPS, {})
+    //    dat = bit.ctlBit.dat
+    //    bal.slv({ ctlBit: { idx: "update-control", dat } });
+    //    return cpy;
+    // }
+
+    // --- NEW DELAY CHECK ---
+    // 2. Enforce the delay for automatic updates.
+    // If the current time is before our target delay time, do nothing and exit.
+    if (Date.now() < cpy.delayUntil) {
+        // We are still within the 100ms delay period.
+        // The time that passes here will be correctly calculated on the first update AFTER the delay ends.
+        bit = await ste.hunt(ActEth.OUTPUT_GLOPS, {})
+        dat = bit.ctlBit.dat
+        bal.slv({ ctlBit: { idx: "update-control", dat } });
+        return cpy;
+    }
+
+    // 2. Determine the parameters for the current mode (slow or fast tick).
+    const isSlowMode = cpy.access === 0;
+    const lastUpdateKey = isSlowMode ? 'lastUpdateTimeLong' : 'lastUpdateTimeShort';
+    const deltaHoldKey = isSlowMode ? 'deltaHoldLong' : 'deltaHoldShort';
+    const threshold = isSlowMode ? cpy.maxLong : cpy.shortValue;
+
+    // 3. Unified Game Loop Logic.
+    const now = Date.now();
+    if (!cpy[lastUpdateKey]) {
+        cpy[lastUpdateKey] = now; // Initialize time if it's the first run for this mode.
+    }
+
+    const timeDelta = now - cpy[lastUpdateKey];
+    cpy[lastUpdateKey] = now;
+    cpy[deltaHoldKey] += timeDelta;
+
+    // 4. Process all accumulated ticks. (Crucial for handling idle time)
+    // Using 'while' instead of 'if' ensures we "catch up" on all missed ticks.
+    while (cpy[deltaHoldKey] >= threshold) {
+        bit = await ste.hunt(ActEth.ADVANCE_GLOPS, {})
+        cpy[deltaHoldKey] -= threshold;
+
+        // 5. Handle logic specific to the "fast tick" mode.
+        if (!isSlowMode) {
+            cpy.tinyCount += 1;
+            if (cpy.tinyCount > cpy.tinyMax) {
+                cpy.shortValue = cpy.maxTiny; // The fast tick rate can change over time.
+            }
+        }
+    }
+
+
+    bit = await ste.hunt(ActEth.OUTPUT_GLOPS, {})
+    dat = bit.ertBit.dat
+
+
+
+    bal.slv({ ertBit: { idx: "update-glops", dat } });
+
+    return cpy;
+};
+
+
+export default interface GlopsBit {
+    idx: string;
+    src?: string;
+    val?: number;
+    dat?: any;
+    slv?: Function;
+    bit?: any;
+    lst?: any[];
+}
+
+
+import  glopsBit  from "./glops.bit";
+
+export default interface Glops {
+ // idx:string;
+ // glopsBitList: glopsBit[];
+ // glopsBits:any;
+
+}
+
+import { Action } from "../99.core/interface/action.interface";
+import  glopsBit  from "./fce/glops.bit";
+
+// glops actions
+
+export const INIT_GLOPS = "[glops action] Init glops";
+export class InitGlops implements Action {
+ readonly type = INIT_GLOPS;
+ constructor(public bale: glopsBit) {}
+}
+
+export const OPEN_GLOPS = "[glops action] Open glops";
+export class OpenGlops implements Action {
+ readonly type = OPEN_GLOPS;
+ constructor(public bale: glopsBit) {}
+}
+
+export const UPDATE_GLOPS = "[glops action] Update glops";
+export class UpdateGlops implements Action {
+ readonly type = UPDATE_GLOPS;
+ constructor(public bale: glopsBit) {}
+}
+
+export const ADVANCE_GLOPS = "[Advance action] Advance glops";
+ export class AdvanceGlops implements Action {
+ readonly type = ADVANCE_GLOPS;
+ constructor(public bale: glopsBit) {}
+ }
+
+export const OUTPUT_GLOPS = "[Output action] Output glops";
+ export class OutputGlops implements Action {
+ readonly type = OUTPUT_GLOPS;
+ constructor(public bale: glopsBit) {}
+ }
+
+export const ACCESS_GLOPS = "[Access action] Access glops";
+ export class AccessGlops implements Action {
+ readonly type = ACCESS_GLOPS;
+ constructor(public bale: glopsBit) {}
+ }
+
+export type Actions = | InitGlops | UpdateGlops | OpenGlops
+| AdvanceGlops
+| OutputGlops
+| AccessGlops
+export { initglops  } from "./buz/glops.buzz";
+
+export { advanceGlops  } from "./buz/advanceGlops.buzz";
+export { updateGlops  } from "./buz/updateGlops.buzz";
+export { openGlops  } from "./buz/openGlops.buzz";
+export { outputGlops  } from "./buz/outputGlops.buzz";
+export { accessGlops  } from "./buz/accessGlops.buzz";
+
+
+import Glops from "./fce/glops.interface";
+import glopsBit from "./fce/glops.interface";
+
+export class GlopsModel implements Glops {
+   opened: number = 0
+
+   dex: number = 0;
+   //idx:string;
+   //glopsBitList: glopsBit[] = [];
+   //glopsBits: any = {};
+   idxClk: string
+   idxInc: string
+
+   access: number = 0
+
+   maxLong: number = 1000;
+
+   lastUpdateTimeShort: number = 0;
+   deltaHoldShort: number = 0;
+   maxShort: number = 100;
+
+   shortValue: number = 0;
+
+   tinyCount:number = 0;
+   tinyMax:number = 20;
+
+   maxTiny: number = 50;
+
+   lastUpdateTimeLong: number = 0;
+   deltaHoldLong: number = 0;
+
+
+   delayUntil: number = 0;
+}
+
+import * as clone from "clone-deep";
+import * as Act from "./glops.action";
+import { GlopsModel } from "./glops.model";
+import * as Buzz from "./glops.buzzer";
+import State from "../99.core/state";
+
+export function reducer(model: GlopsModel = new GlopsModel(), act: Act.Actions,  state?: State ) {
+ switch (act.type) {
+
+ case Act.UPDATE_GLOPS:
+ return Buzz.updateGlops(clone(model), act.bale, state);
+
+ case Act.INIT_GLOPS:
+ return Buzz.initGlops(clone(model), act.bale, state);
+
+ case Act.OPEN_GLOPS:
+ return Buzz.openGlops(clone(model), act.bale, state);
+
+case Act.ADVANCE_GLOPS:
+ return Buzz.advanceGlops(clone(model), act.bale, state);
+
+case Act.OUTPUT_GLOPS:
+ return Buzz.outputGlops(clone(model), act.bale, state);
+
+case Act.ACCESS_GLOPS:
+ return Buzz.accessGlops(clone(model), act.bale, state);
+
+ default:
+ return model;
+ }
+}
+
+import State from "../99.core/state";
+
+
+export default class glopsUnit {
+
+ constructor(state: State) {
+ }
+}
+
+'use server'
+
+import * as Import from "./BEE";
+import State from "./99.core/state";
+
+var dex = 0;
+
+let instance = null;
+
+var sim = {
+  hunt: (a, b) => { },
+  state: null
+};
+
+sim.hunt = (typ, obj) => { return host(obj, typ) }
+
+var host = (obj, typ) => {
+
+  init();
+
+  var slv;
+  const promo = new Promise((rslv, rjct) => (slv = rslv));
+
+  if (obj == null) obj = {};
+  if (obj.slv == null) obj.slv = (val0) => slv(val0);
+
+  sim.state.dispatch({ type: typ, bale: obj });
+  return promo;
+};
+
+var init = () => {
+
+  if (!instance) {
+
+    if (sim.state != null) return;
+    sim.state = new State();
+    sim.state.pivot = sim;
+    sim.state.hunt = sim.hunt
+    for (var k in Import.list) new Import.list[k](sim.state);
+    instance = sim
+  }
+
+
+  return instance
+
+};
+
+
+
+export const glops = async (typ, obj) => {
+
+  return sim.hunt(typ, obj)
+}
+import { WorldModel } from "../world.model";
+import WorldBit from "../fce/world.bit";
+import State from "../../99.core/state";
+import OrbBit from "../fce/orb.bit";
+
+
+import * as ActClr from "../../03.color.unit/color.action";
+
+import * as ActWld from "../../01.world.unit/world.action";
+import * as ActCol from "../../97.collect.unit/collect.action";
+import * as ActBus from "../../99.bus.unit/bus.action";
+
+
+import EtherealBit from "../fce/talent/etheric.bit";
+
+var bit, val, idx, dex, lst, dat, src;
+
+export const createWorld = async (cpy: WorldModel, bal: WorldBit, ste: State) => {
+
+    var dat: OrbBit = { idx: bal.idx, src: bal.src }
+
+    //var etri:EtherealBit = { bliyte:null, grusit:null, flxuow:null, kldadu:null };
+    //dat.bit = etri;
+
+    //bit = await ste.hunt( ActClr.BASKET_COLOR, {})
+    //dat.bit.bliyte = bit.clrBit.dat
+
+    //bit = await ste.hunt( ActClr.BASKET_COLOR, {})
+    //dat.bit.flxuow = bit.clrBit.dat
+
+    //bit = await ste.hunt( ActClr.BASKET_COLOR, {})
+    //dat.bit.grusit = bit.clrBit.dat
+
+    //bit = await ste.hunt( ActClr.BASKET_COLOR, {})
+    //dat.bit.kldadu = bit.clrBit.dat
+
+    //dat
+
+    bal.slv({ wldBit: { idx: "create-world", dat } });
+
+    return cpy;
+};
+
+import { WorldModel } from "../world.model";
+import WorldBit from "../fce/world.bit";
+import State from "../../99.core/state";
+import OrbBit from "../fce/orb.bit";
+
+
+import * as ActWld from "../../01.world.unit/world.action";
+import * as ActCol from "../../97.collect.unit/collect.action";
+import * as ActBus from "../../99.bus.unit/bus.action";
+
+
+
+
+var bit, val, idx, dex, lst, dat, src;
+
+export const initWorld = async (cpy: WorldModel, bal: WorldBit, ste: State) => {
+
+    //set up colors
+    //src = '000.color.name.json'
+    //bit = await ste.bus(ActDsk.READ_DISK, { src: './data/color-list/' + src })
+    //var colorList = bit.dskBit.dat;
+
+    //lst = JSON.parse(colorList)
+
+    //bit = await ste.bus(ActClr.WRITE_COLOR, { idx: 'clr00', dat: { lst } });
+
+    //var staveDataLoc = './data/stave/'
+    //src = staveDataLoc + '002.genisi.txt';
+
+    //bit = await ste.bus(ActStv.WRITE_STAVE, { src });
+
+    bal.slv({ intBit: { idx: "init-world" } });
+
+    return cpy;
+};
+
+
+export const updateWorld = async (cpy: WorldModel, bal: WorldBit, ste: State) => {
+    return cpy;
+};
+
+
+export const readWorld = async (cpy: WorldModel, bal: WorldBit, ste: State) => {
+
+    if (bal.idx == null) bal.idx = 'wld00';
+    bit = await ste.hunt(ActCol.READ_COLLECT, { idx: bal.idx, bit: ActWld.CREATE_WORLD })
+
+    bal.slv({ wldBit: { idx: "read-world", dat: bit.clcBit.dat } });
+    return cpy;
+};
+
+export const writeWorld = async (cpy: WorldModel, bal: WorldBit, ste: State) => {
+
+    bit = await ste.hunt(ActCol.WRITE_COLLECT, { idx: bal.idx, src: bal.src, dat: bal.dat, bit: ActWld.CREATE_WORLD })
+
+    if (bal.slv != null) bal.slv({ wldBit: { idx: "write-world", dat: bit.clcBit.dat } });
+    return cpy;
+};
+
+
+
+export const removeWorld = async (cpy: WorldModel, bal: WorldBit, ste: State) => {
+    debugger
+    return cpy;
+};
+
+
+export const deleteWorld = async (cpy: WorldModel, bal: WorldBit, ste: State) => {
+    debugger
+    return cpy;
+};
+
+export default interface OrbBit {
+    idx: string;
+    src?: string;
+    val?: number;
+}
+
+export default interface AuthenticBit {
+    direction: string;
+    purpose: string;
+    cohesion: string;
+}
+
+export default interface CapacitiveBit {
+    cognition: string;
+    vocabulary: string;
+    reminiscence: string;
+}
+
+export default interface EthericBit {
+    bliyte: string;
+    grusit: string;
+    flxuow: string;
+    kldadu: string
+}
+
+export default interface ImaginativeBit {
+    style: string;
+    ingenuity: string;
+    vision: string;
+}
+
+export default interface LegitimateBit {
+    fidelity: string;
+    recognition: string;
+    sovereignty: string;
+}
+
+export default interface PivotalBit {
+    contribution: string;
+    gravity: string;
+    providence: string;
+}
+
+export default interface ReactiveBit {
+    discernment: string;
+    impulse: string;
+    sensation: string;
+}
+
+export default interface SignificantBit {
+    force: string;
+    charge: string;
+    scale: string;
+}
+
+export default interface VigorousBit {
+    pizazz: string;
+    oomph: string;
+    zing: string;
+}
+
+export default interface WorldBit {
+    idx: string;
+    src?: string;
+    val?: number;
+    dat?: any;
+    slv?: Function;
+    bit?: any;
+    lst?: any[];
+}
+
+import  WorldBit  from "./world.bit";
+
+export default interface World {
+ // idx:string;
+ // worldBitList: WorldBit[];
+ // worldBits:any;
+
+}
+
+import { Action } from "../99.core/interface/action.interface";
+import  WorldBit  from "./fce/world.bit";
+
+// World actions
+
+export const INIT_WORLD = "[World action] Init World";
+export class InitWorld implements Action {
+ readonly type = INIT_WORLD;
+ constructor(public bale: WorldBit) {}
+}
+
+export const UPDATE_WORLD = "[World action] Update World";
+export class UpdateWorld implements Action {
+ readonly type = UPDATE_WORLD;
+ constructor(public bale: WorldBit) {}
+}
+
+export const READ_WORLD = "[Read action] Read World";
+ export class ReadWorld implements Action {
+ readonly type = READ_WORLD;
+ constructor(public bale: WorldBit) {}
+ }
+
+export const WRITE_WORLD = "[Write action] Write World";
+ export class WriteWorld implements Action {
+ readonly type = WRITE_WORLD;
+ constructor(public bale: WorldBit) {}
+ }
+
+export const REMOVE_WORLD = "[Remove action] Remove World";
+ export class RemoveWorld implements Action {
+ readonly type = REMOVE_WORLD;
+ constructor(public bale: WorldBit) {}
+ }
+
+export const DELETE_WORLD = "[Delete action] Delete World";
+ export class DeleteWorld implements Action {
+ readonly type = DELETE_WORLD;
+ constructor(public bale: WorldBit) {}
+ }
+
+export const CREATE_WORLD = "[Create action] Create World";
+ export class CreateWorld implements Action {
+ readonly type = CREATE_WORLD;
+ constructor(public bale: WorldBit) {}
+ }
+
+export type Actions = | InitWorld | UpdateWorld
+| ReadWorld
+| WriteWorld
+| RemoveWorld
+| DeleteWorld
+| CreateWorld
+
+export { initWorld  } from "./buz/world.buzz";
+export { updateWorld  } from "./buz/world.buzz";
+export { readWorld  } from "./buz/world.buzz";
+export { writeWorld  } from "./buz/world.buzz";
+export { removeWorld  } from "./buz/world.buzz";
+export { deleteWorld  } from "./buz/world.buzz";
+export { createWorld  } from "./buz/createWorld.buzz";
+
+import World from "./fce/world.interface";
+import WorldBit from "./fce/world.interface";
+
+export class WorldModel implements World {
+ //idx:string;
+ //worldBitList: WorldBit[] = [];
+ //worldBits: any = {};
+}
+
+import * as clone from "clone-deep";
+import * as Act from "./world.action";
+import { WorldModel } from "./world.model";
+import * as Buzz from "./world.buzzer";
+import State from "../99.core/state";
+
+export function reducer(model: WorldModel = new WorldModel(), act: Act.Actions,  state?: State ) {
+ switch (act.type) {
+
+ case Act.UPDATE_WORLD:
+ return Buzz.updateWorld(clone(model), act.bale, state);
+
+ case Act.INIT_WORLD:
+ return Buzz.initWorld(clone(model), act.bale, state);
+
+case Act.READ_WORLD:
+ return Buzz.readWorld(clone(model), act.bale, state);
+
+case Act.WRITE_WORLD:
+ return Buzz.writeWorld(clone(model), act.bale, state);
+
+case Act.REMOVE_WORLD:
+ return Buzz.removeWorld(clone(model), act.bale, state);
+
+case Act.DELETE_WORLD:
+ return Buzz.deleteWorld(clone(model), act.bale, state);
+
+case Act.CREATE_WORLD:
+ return Buzz.createWorld(clone(model), act.bale, state);
+
+ default:
+ return model;
+ }
+}
+
+import State from "../99.core/state";
+
+
+export default class WorldUnit {
+
+ constructor(state: State) {
+ }
+}
+
+import * as ActFte from '../fate.action'
+
+
+import { FateModel } from "../fate.model";
+import FateBit from "../fce/fate.bit";
+import State from "../../99.core/state";
+
+var bit
+
+export const initFate = (cpy: FateModel, bal: FateBit, ste: State) => {
+
+    bal.slv({ intBit: { idx: "init-fate", dat: {} } });
+    return cpy;
+};
+
+export const updateFate = (cpy: FateModel, bal: FateBit, ste: State) => {
+
+    var Chance = require("chance");
+    cpy.fate = new Chance(cpy.seed);
+    cpy.seed += 1;
+
+    bal.slv({ fteBit: { idx: "update-fate", dat: {} } });
+
+    return cpy;
+};
+
+
+export const integerFate = async (cpy: FateModel, bal: FateBit, ste: State) => {
+
+    if (cpy.fate == null) bit = await ste.hunt(ActFte.UPDATE_FATE, {})
+
+    if (bal == null) bal = { idx: '' }
+    if (bal.lst == null) bal.lst = [0, 9]
+
+    var val = cpy.fate.integer({ min: bal.lst[0], max: bal.lst[1] });
+
+    bal.slv({ fteBit: { idx: "integer-fate", val } });
+
+    return cpy;
+};
+
+export const appleFate = async (cpy: FateModel, bal: FateBit, ste: State) => {
+
+    if (cpy.fate == null) bit = await ste.hunt(ActFte.UPDATE_FATE, {})
+
+    var val = cpy.fate.apple_token();
+
+    bal.slv({ fteBit: { idx: "apple-fate", val } });
+
+    return cpy;
+};
+
+var data = {}
+
+export const sineFate = async (cpy: FateModel, bal: FateBit, ste: State) => {
+    bit = await ste.hunt(ActFte.INTEGER_FATE, {})
+    cpy.position += bit.fteBit.val + 1;
+    cpy.sine = cpy.amplitude * Math.sin(cpy.frequency * cpy.position) * .1;
+    cpy.sine = Number(cpy.sine.toFixed(3))
+
+    if ( data[ 'sine' + cpy.sine ] == null ) data[ 'sine' + cpy.sine ] = 1;
+    else {
+    //    debugger
+    }
+
+    var dex = 0
+    for ( var key in data ){
+        dex += 1;
+     }
+
+    bal.slv({ fteBit: { idx: "sine-fate", val: cpy.sine, dex } });
+    return cpy;
+};
+import * as ActFte from '../fate.action'
+
+import { FateModel } from "../fate.model";
+import FateBit from "../fce/fate.bit";
+import State from "../../99.core/state";
+
+var bit
+
+export const selectFate = async (cpy: FateModel, bal: FateBit, ste: State) => {
+
+    if (cpy.fate == null) bit = await ste.hunt(ActFte.UPDATE_FATE, {})
+
+    if (bal == null) bal = { idx: null, lst: null }
+
+    if (bal.lst == null) bal.lst = [1, 2]
+    var dat = cpy.fate.pickone(bal.lst)
+
+    bal.slv({ fteBit: { idx: "select-fate", dat } });
+
+    return cpy;
+};
+
+import * as ActFte from '../fate.action'
+
+import { FateModel } from "../fate.model";
+import FateBit from "../fce/fate.bit";
+import State from "../../99.core/state";
+
+var bit,lst
+
+export const shuffleFate = async (cpy: FateModel, bal: FateBit, ste: State) => {
+
+
+
+    if (cpy.fate == null) bit = await ste.hunt(ActFte.UPDATE_FATE, {})
+
+    if (bal == null) bal = { idx: null, lst: null }
+
+    if (bal.lst == null) bal.lst = [1, 2]
+    lst = cpy.fate.shuffle(bal.lst)
+
+    bal.slv({ fteBit: { idx: "shuffle-fate", lst } });
+
+    return cpy;
+};
+
+import { Action } from "../99.core/interface/action.interface";
+import  FateBit  from "./fce/fate.bit";
+
+// Fate actions
+
+export const INIT_FATE = "[Fate action] Init Fate";
+export class InitFate implements Action {
+ readonly type = INIT_FATE;
+ constructor(public bale: FateBit) {}
+}
+
+export const UPDATE_FATE = "[Fate action] Update Fate";
+export class UpdateFate implements Action {
+ readonly type = UPDATE_FATE;
+ constructor(public bale: FateBit) {}
+}
+
+export const INTEGER_FATE = "[Fate action] Integer Fate";
+ export class IntegerFate implements Action {
+ readonly type = INTEGER_FATE;
+ constructor(public bale: FateBit) {}
+ }
+
+export const APPLE_FATE = "[Fate action] Apple Fate";
+ export class AppleFate implements Action {
+ readonly type = APPLE_FATE;
+ constructor(public bale: FateBit) {}
+ }
+
+export const SINE_FATE = "[Sine action] Sine Fate";
+ export class SineFate implements Action {
+ readonly type = SINE_FATE;
+ constructor(public bale: FateBit) {}
+ }
+
+export const SELECT_FATE = "[Select action] Select Fate";
+ export class SelectFate implements Action {
+ readonly type = SELECT_FATE;
+ constructor(public bale: FateBit) {}
+ }
+
+export const SHUFFLE_FATE = "[Shuffle action] Shuffle Fate";
+ export class ShuffleFate implements Action {
+ readonly type = SHUFFLE_FATE;
+ constructor(public bale: FateBit) {}
+ }
+
+export type Actions = | InitFate | UpdateFate
+| IntegerFate
+| AppleFate
+| SineFate
+| SelectFate
+| ShuffleFate
+export { initFate  } from "./buz/fate.buzz";
+export { updateFate  } from "./buz/fate.buzz";
+export { integerFate  } from "./buz/fate.buzz";
+export { appleFate  } from "./buz/fate.buzz";
+export { sineFate  } from "./buz/fate.buzz";
+export { selectFate  } from "./buz/selectFate.buzz";
+export { shuffleFate  } from "./buz/shuffleFate.buzz";
+import Fate from "./fce/fate.interface";
+import FateBit from "./fce/fate.interface";
+
+export class FateModel implements Fate {
+ //idx:string;
+ //fateBitList: FateBit[] = [];
+ //fateBits: any = {};
+ fate:any;
+ seed:number = 19250925;
+
+ amplitude:number = 10;  // Wave height
+ frequency:number = 0.1; // How many cycles
+ phaseShift:number = 0;  // Horizontal offset
+ position:number = 0;
+ sine:number = 0;
+
+}
+
+import * as clone from "clone-deep";
+import * as Act from "./fate.action";
+import { FateModel } from "./fate.model";
+import * as Buzz from "./fate.buzzer";
+import State from "../99.core/state";
+
+export function reducer(model: FateModel = new FateModel(), act: Act.Actions,  state?: State ) {
+ switch (act.type) {
+
+ case Act.UPDATE_FATE:
+ return Buzz.updateFate(clone(model), act.bale, state);
+
+ case Act.INIT_FATE:
+ return Buzz.initFate(clone(model), act.bale, state);
+
+case Act.INTEGER_FATE:
+ return Buzz.integerFate(clone(model), act.bale, state);
+
+case Act.APPLE_FATE:
+ return Buzz.appleFate(clone(model), act.bale, state);
+
+case Act.SINE_FATE:
+ return Buzz.sineFate(clone(model), act.bale, state);
+
+case Act.SELECT_FATE:
+ return Buzz.selectFate(clone(model), act.bale, state);
+
+case Act.SHUFFLE_FATE:
+ return Buzz.shuffleFate(clone(model), act.bale, state);
+
+ default:
+ return model;
+ }
+}
+
+import State from "../99.core/state";
+
+export default class FateUnit {
+
+ constructor(state: State) {
+ }
+}
+
+
+export default interface FateBit {
+ idx: string;
+ src?: string;
+ val?: number;
+ dat?: any;
+ slv?: Function;
+ lst?: [number, number]
+}
+
+
+import  FateBit  from "./fate.bit";
+
+export default interface Fate {
+ // idx:string;
+ // fateBitList: FateBit[];
+ // fateBits:any;
+
+}
+
+
+
+import * as ActCol from "../../97.collect.unit/collect.action";
+import * as ActClr from "../color.action";
+
+import { ColorModel } from "../color.model";
+import ColorBit from "../fce/color.bit";
+
+import State from "../../99.core/state";
+
+var bit, val, idx, dex, lst, dat, src;
+
+export const initColor = (cpy: ColorModel, bal: ColorBit, ste: State) => {
+    bal.slv({ intBit: { idx: "init-color" } });
+    return cpy;
+};
+
+
+
+export const updateColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
+    // Logic for updating color properties would go here.
+    bal.slv({ clrBit: { idx: "update-color", dat: bal.dat } });
+    return cpy;
+};
+
+export const readColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
+    if (bal.idx == null) bal.idx = 'clr00';
+    bit = await ste.hunt(ActCol.READ_COLLECT, { idx: bal.idx, bit: ActClr.CREATE_COLOR });
+    if (bal.slv != null) bal.slv({ clrBit: { idx: "read-color", dat: bit.clcBit.dat } });
+    return cpy;
+};
+
+export const writeColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
+    bit = await ste.hunt(ActCol.WRITE_COLLECT, { idx: bal.idx, dat: bal.dat, bit: ActClr.CREATE_COLOR });
+    if (bal.slv != null) bal.slv({ clrBit: { idx: "write-color", dat: bit.clcBit.dat } });
+    return cpy;
+};
+
+export const removeColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
+    bit = await ste.hunt(ActCol.REMOVE_COLLECT, { idx: bal.idx, bit: ActClr.DELETE_COLOR });
+    if (bal.slv != null) bal.slv({ clrBit: { idx: "remove-color", dat: bit.clcBit.dat } });
+    return cpy;
+};
+
+export const deleteColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
+    // No complex resources to clean up for a simple data object.
+    if (bal.slv != null) bal.slv({ clrBit: { idx: "delete-color" } });
+    return cpy;
+};
+
+
+export const listColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
+
+    dat = null
+
+    bit = await ste.hunt(ActCol.LIST_COLLECT, { val: 0, bit: ActClr.CREATE_COLOR })
+    lst = bit.clcBit.lst
+
+    bal.slv({ clrBit: { idx: 'list-color', val: lst.length, lst } });
+
+    return cpy;
+};
+import { ColorModel } from "../color.model";
+import ColorBit from "../fce/color.bit";
+import State from "../../99.core/state";
+
+import ClrBit from "../fce/clr.bit";
+
+import * as ActClr from '../color.action'
+import * as ActFte from '../../../000.glops/02.fate.unit/fate.action'
+
+var bit, lst, idx, src, dat, val;
+
+export const accessColor = (cpy: ColorModel, bal: ColorBit, ste: State) => {
+
+
+
+    dat = { val: cpy.basket.length }
+
+    bal.slv({ clrBit: { idx: "access-color", dat } });
+
+    return cpy;
+};
+
+import { ColorModel } from "../color.model";
+import ColorBit from "../fce/color.bit";
+import State from "../../99.core/state";
+import * as clone from "clone-deep";
+
+import * as ActClr from '../color.action'
+import * as ActFte from '../../../000.glops/02.fate.unit/fate.action'
+
+var bit, lst, idx, src, dat, val;
+
+export const basketColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
+
+
+
+    var nowColor;
+
+    if (cpy.basket.length == 0) {
+        lst = clone(cpy.nameList)
+        var fteBit = await ste.hunt(ActFte.SHUFFLE_FATE, { lst })
+        cpy.basket = fteBit.fteBit.lst
+    }
+
+    if (cpy.basket.length == 1) {
+        nowColor = basketColor[0]
+
+        //BASKET RESET!!!
+
+    } else {
+
+        var fteBit = await ste.hunt(ActFte.SELECT_FATE, { lst: cpy.basket })
+
+        nowColor = fteBit.fteBit.dat
+
+        var index = 0;
+
+        cpy.basket.forEach( (a,b)=>{
+            if ( a !=  nowColor ) return
+            index = b
+        })
+
+        cpy.basket.splice(index, 1);
+
+    }
+
+    bal.slv({ clrBit: { idx: 'basket-color', dat: nowColor, val:cpy.basket.length } });
+
+    return cpy;
+};
+import { ColorModel } from "../color.model";
+import ColorBit from "../fce/color.bit";
+import State from "../../99.core/state";
+
+import ClrBit from "../fce/clr.bit";
+
+import * as ActClr from '../color.action'
+import * as ActFte from '../../../000.glops/02.fate.unit/fate.action'
+
+var bit, lst, idx, src, dat, val;
+
+export const createColor = (cpy: ColorModel, bal: ColorBit, ste: State) => {
+    var dat: ClrBit = { idx: bal.idx, hex: '#FFFFFF' }; // Default color is white
+
+    if (bal.dat != null) {
+        for (var key in bal.dat) {
+            dat[key] = bal.dat[key];
+        }
+    }
+
+    if (cpy.names[bal.idx] == null) {
+        cpy.nameList.push(bal.idx)
+        cpy.names[bal.idx] = 1
+    }
+
+    bal.slv({ clrBit: { idx: "create-color", dat: dat } });
+    return cpy;
+};
+
+
+import { ColorModel } from "../color.model";
+import ColorBit from "../fce/color.bit";
+import State from "../../99.core/state";
+
+import * as ActClr from '../color.action'
+
+var lst, idx, src, dat, val;
+
+export const openColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
+
+
+
+    lst = bal.lst
+
+    var dex = 0;
+
+    var action = async () => {
+
+
+
+        dex
+        var itm = lst[dex];
+        if (itm == null) {
+            bal.slv({ clrBit: { idx: "open-color-error", src: 'no item present' } });
+        }
+
+        var name = itm.name;
+
+        var S = require('string')
+        idx = S(name).slugify().s
+        src = itm.value
+        dat = itm.rgb
+        val = itm.value
+
+        await ste.hunt(ActClr.WRITE_COLOR, { idx, src, val, dat })
+
+        dex += 1;
+
+        if (dex >= lst.length) {
+
+            bal.slv({ clrBit: { idx: "open-color", val: lst.length } });
+            return
+        }
+
+        await action()
+
+    }
+
+    await action()
+
+    return cpy;
+};
+
+
+import { ColorModel } from "../color.model";
+import ColorBit from "../fce/color.bit";
+import State from "../../99.core/state";
+
+import * as ActClr from '../color.action'
+import * as ActFte from '../../../000.glops/02.fate.unit/fate.action'
+
+var bit, lst, idx, src, dat, val;
+
+export const randomColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
+
+    bit = await ste.hunt(ActClr.LIST_COLOR)
+
+    lst = bit.clrBit.lst
+
+    bit = await ste.hunt( ActFte.SELECT_FATE, {lst})
+    idx = bit.fteBit.dat
+
+    bit = await ste.hunt(ActClr.READ_COLOR, {idx})
+
+    dat = bit.clrBit.dat;
+
+    bal.slv({ clrBit: { idx: 'randome-color', dat } });
+
+    return cpy;
+};
+import { Action } from "../99.core/interface/action.interface";
+import ColorBit from "./fce/color.bit";
+export declare const INIT_COLOR = "[Color action] Init Color";
+export declare class InitColor implements Action {
+    bale: ColorBit;
+    readonly type = "[Color action] Init Color";
+    constructor(bale: ColorBit);
+}
+export declare const UPDATE_COLOR = "[Color action] Update Color";
+export declare class UpdateColor implements Action {
+    bale: ColorBit;
+    readonly type = "[Color action] Update Color";
+    constructor(bale: ColorBit);
+}
+export declare const OPEN_COLOR = "[Open action] Open Color";
+export declare class OpenColor implements Action {
+    bale: ColorBit;
+    readonly type = "[Open action] Open Color";
+    constructor(bale: ColorBit);
+}
+export declare const READ_COLOR = "[Read action] Read Color";
+export declare class ReadColor implements Action {
+    bale: ColorBit;
+    readonly type = "[Read action] Read Color";
+    constructor(bale: ColorBit);
+}
+export declare const WRITE_COLOR = "[Write action] Write Color";
+export declare class WriteColor implements Action {
+    bale: ColorBit;
+    readonly type = "[Write action] Write Color";
+    constructor(bale: ColorBit);
+}
+export declare const REMOVE_COLOR = "[Remove action] Remove Color";
+export declare class RemoveColor implements Action {
+    bale: ColorBit;
+    readonly type = "[Remove action] Remove Color";
+    constructor(bale: ColorBit);
+}
+export declare const DELETE_COLOR = "[Delete action] Delete Color";
+export declare class DeleteColor implements Action {
+    bale: ColorBit;
+    readonly type = "[Delete action] Delete Color";
+    constructor(bale: ColorBit);
+}
+export declare const CREATE_COLOR = "[Create action] Create Color";
+export declare class CreateColor implements Action {
+    bale: ColorBit;
+    readonly type = "[Create action] Create Color";
+    constructor(bale: ColorBit);
+}
+export declare const LIST_COLOR = "[List action] List Color";
+export declare class ListColor implements Action {
+    bale: ColorBit;
+    readonly type = "[List action] List Color";
+    constructor(bale: ColorBit);
+}
+export declare const RANDOM_COLOR = "[Random action] Random Color";
+export declare class RandomColor implements Action {
+    bale: ColorBit;
+    readonly type = "[Random action] Random Color";
+    constructor(bale: ColorBit);
+}
+export declare const BASKET_COLOR = "[Basket action] Basket Color";
+export declare class BasketColor implements Action {
+    bale: ColorBit;
+    readonly type = "[Basket action] Basket Color";
+    constructor(bale: ColorBit);
+}
+export declare const ACCESS_COLOR = "[Access action] Access Color";
+export declare class AccessColor implements Action {
+    bale: ColorBit;
+    readonly type = "[Access action] Access Color";
+    constructor(bale: ColorBit);
+}
+export type Actions = InitColor | UpdateColor | OpenColor | ReadColor | WriteColor | RemoveColor | DeleteColor | CreateColor | ListColor | RandomColor | BasketColor | AccessColor;
+
+import { Action } from "../99.core/interface/action.interface";
+import  ColorBit  from "./fce/color.bit";
+
+// Color actions
+
+export const INIT_COLOR = "[Color action] Init Color";
+export class InitColor implements Action {
+ readonly type = INIT_COLOR;
+ constructor(public bale: ColorBit) {}
+}
+
+export const UPDATE_COLOR = "[Color action] Update Color";
+export class UpdateColor implements Action {
+ readonly type = UPDATE_COLOR;
+ constructor(public bale: ColorBit) {}
+}
+
+export const OPEN_COLOR = "[Open action] Open Color";
+ export class OpenColor implements Action {
+ readonly type = OPEN_COLOR;
+ constructor(public bale: ColorBit) {}
+ }
+
+export const READ_COLOR = "[Read action] Read Color";
+ export class ReadColor implements Action {
+ readonly type = READ_COLOR;
+ constructor(public bale: ColorBit) {}
+ }
+
+export const WRITE_COLOR = "[Write action] Write Color";
+ export class WriteColor implements Action {
+ readonly type = WRITE_COLOR;
+ constructor(public bale: ColorBit) {}
+ }
+
+export const REMOVE_COLOR = "[Remove action] Remove Color";
+ export class RemoveColor implements Action {
+ readonly type = REMOVE_COLOR;
+ constructor(public bale: ColorBit) {}
+ }
+
+export const DELETE_COLOR = "[Delete action] Delete Color";
+ export class DeleteColor implements Action {
+ readonly type = DELETE_COLOR;
+ constructor(public bale: ColorBit) {}
+ }
+
+export const CREATE_COLOR = "[Create action] Create Color";
+ export class CreateColor implements Action {
+ readonly type = CREATE_COLOR;
+ constructor(public bale: ColorBit) {}
+ }
+
+export const LIST_COLOR = "[List action] List Color";
+ export class ListColor implements Action {
+ readonly type = LIST_COLOR;
+ constructor(public bale: ColorBit) {}
+ }
+
+export const RANDOM_COLOR = "[Random action] Random Color";
+ export class RandomColor implements Action {
+ readonly type = RANDOM_COLOR;
+ constructor(public bale: ColorBit) {}
+ }
+
+export const BASKET_COLOR = "[Basket action] Basket Color";
+ export class BasketColor implements Action {
+ readonly type = BASKET_COLOR;
+ constructor(public bale: ColorBit) {}
+ }
+
+export const ACCESS_COLOR = "[Access action] Access Color";
+ export class AccessColor implements Action {
+ readonly type = ACCESS_COLOR;
+ constructor(public bale: ColorBit) {}
+ }
+
+export type Actions = | InitColor | UpdateColor
+| OpenColor
+| ReadColor
+| WriteColor
+| RemoveColor
+| DeleteColor
+| CreateColor
+| ListColor
+| RandomColor
+| BasketColor
+| AccessColor
+export { initColor  } from "./buz/0.color.buzz";
+export { updateColor  } from "./buz/0.color.buzz";
+export { readColor } from "./buz/0.color.buzz";
+export { writeColor } from "./buz/0.color.buzz";
+export { removeColor } from "./buz/0.color.buzz";
+export { deleteColor } from "./buz/0.color.buzz";
+export { listColor  } from "./buz/0.color.buzz";
+export { randomColor  } from "./buz/randomColor.buzz";
+export { basketColor  } from "./buz/basketColor.buzz";
+export { openColor  } from "./buz/openColor.buzz";
+export { createColor } from "./buz/createColor.buzz";
+export { accessColor  } from "./buz/accessColor.buzz";
+import Color from "./fce/color.interface";
+import ColorBit from "./fce/color.interface";
+
+export class ColorModel implements Color {
+    //idx:string;
+    //colorBitList: ColorBit[] = [];
+    //colorBits: any = {};
+    nameList: any[] = []
+    names: any = {}
+    basket: any[] = []
+}
+
+import * as clone from "clone-deep";
+import * as Act from "./color.action";
+import { ColorModel } from "./color.model";
+import * as Buzz from "./color.buzzer";
+import State from "../99.core/state";
+
+export function reducer(model: ColorModel = new ColorModel(), act: Act.Actions,  state?: State ) {
+ switch (act.type) {
+
+ case Act.UPDATE_COLOR:
+ return Buzz.updateColor(clone(model), act.bale, state);
+
+ case Act.INIT_COLOR:
+ return Buzz.initColor(clone(model), act.bale, state);
+
+case Act.OPEN_COLOR:
+ return Buzz.openColor(clone(model), act.bale, state);
+
+case Act.READ_COLOR:
+ return Buzz.readColor(clone(model), act.bale, state);
+
+case Act.WRITE_COLOR:
+ return Buzz.writeColor(clone(model), act.bale, state);
+
+case Act.REMOVE_COLOR:
+ return Buzz.removeColor(clone(model), act.bale, state);
+
+case Act.DELETE_COLOR:
+ return Buzz.deleteColor(clone(model), act.bale, state);
+
+case Act.CREATE_COLOR:
+ return Buzz.createColor(clone(model), act.bale, state);
+
+case Act.LIST_COLOR:
+ return Buzz.listColor(clone(model), act.bale, state);
+
+case Act.RANDOM_COLOR:
+ return Buzz.randomColor(clone(model), act.bale, state);
+
+case Act.BASKET_COLOR:
+ return Buzz.basketColor(clone(model), act.bale, state);
+
+case Act.ACCESS_COLOR:
+ return Buzz.accessColor(clone(model), act.bale, state);
+
+ default:
+ return model;
+ }
+}
+import State from "../99.core/state";
+
+export default class ColorUnit {
+
+ constructor(state: State) {
+ }
+}
+
+
+export default interface ColorBit {
+ idx: string;
+ hex?: string;
+}
+
+export default interface ColorBit {
+    idx: string;
+    src?: string;
+    val?: number;
+    dat?: any;
+    lst?: any[];
+    slv?: Function;
+}
+
+
+export default interface ColorBit {
+    idx: string;
+    src?: string;
+    val?: number;
+    dat?: any;
+    lst?: any[]
+    slv?: Function;
+}
+
+
+import  ColorBit  from "./color.bit";
+
+export default interface Color {
+ // idx:string;
+ // colorBitList: ColorBit[];
+ // colorBits:any;
+
+}
+
+import * as ActCol from '../../97.collect.unit/collect.action';
+
+import { CollectModel } from '../collect.model';
+import CollectBit from '../fce/collect.bit';
+import State from '../../99.core/state';
+import CaboodleBit from '../fce/caboodle.bit';
+import S from 'string';
+
+import * as doT from 'dot';
+
+var bit, lst, dat, idx, val, src, dex;
+
+export const initCollect = (cpy: CollectModel, bal: CollectBit, ste: State) => {
+  return cpy;
+};
+
+export const updateCollect = (
+  cpy: CollectModel,
+  bal: CollectBit,
+  ste: State,
+) => {
+  return cpy;
+};
+
+//return the first item in a collection
+export const fetchCollect = (
+  cpy: CollectModel,
+  bal: CollectBit,
+  ste: State,
+) => {
+  if (bal.val == null) bal.val = 1;
+
+  if (bal.bit == null)
+    bal.slv({ clcBit: { idx: 'fetch-collect-err', src: 'no-bit' } });
+  var type = bal.bit.split(' ').slice(-1).pop().toLowerCase();
+  var cabBit: CaboodleBit = cpy.caboodleBitList[cpy.caboodleBits[type]];
+
+  if (bal.val == 1) bit = cabBit.bitList[0];
+  else bit = cabBit;
+
+  if (bal.slv != null) bal.slv({ clcBit: { idx: 'fetch-collect', dat: bit } });
+  return cpy;
+};
+
+export const readCollect = async (
+  cpy: CollectModel,
+  bal: CollectBit,
+  ste: State,
+) => {
+  if (bal.bit == null)
+    bal.slv({ clcBit: { idx: 'read-collect-err', src: 'no-bit' } });
+
+  var type = bal.bit.split(' ').slice(-1).pop().toLowerCase();
+  if (cpy.caboodleBits[type] == null) createCollect(cpy, { idx: type }, ste);
+
+  var cabBit: CaboodleBit = cpy.caboodleBitList[cpy.caboodleBits[type]];
+
+  if (cabBit.bits[bal.idx] == null) {
+    bit = await ste.hunt(ActCol.WRITE_COLLECT, {
+      idx: bal.idx,
+      src: bal.src,
+      bit: bal.bit,
+    });
+  } else {
+    dat = cabBit.bitList[cabBit.bits[bal.idx]];
+  }
+
+  if (bal.slv != null) bal.slv({ clcBit: { idx: 'read-collect', dat } });
+  return cpy;
+};
+
+export const writeCollect = async (
+  cpy: CollectModel,
+  bal: CollectBit,
+  ste: State,
+) => {
+  dat = null;
+
+  //let us check see if it exists
+  var type = bal.bit.split(' ').slice(-1).pop().toLowerCase();
+
+  if (cpy.caboodleBits[type] == null) createCollect(cpy, { idx: type }, ste);
+
+  if (bal.bit == null)
+    bal.slv({ rskBit: { idx: 'write-collect-err', src: 'no-bit' } });
+
+  var cabBit: CaboodleBit = cpy.caboodleBitList[cpy.caboodleBits[type]];
+
+  bal.idx;
+
+  val = 0;
+
+
+
+  if (cabBit.bits[bal.idx] == null) {
+    bit = await ste.hunt(bal.bit, { idx: bal.idx, src: bal.src, dat: bal.dat });
+    var objDat = bit[Object.keys(bit)[0]];
+    dat = objDat.dat;
+
+    if (dat == null) dat = {};
+
+    dat.dex = cabBit.bitList.length;
+    cabBit.bitList.push(dat);
+
+
+
+    var idx = bal.idx;
+    if (idx == null) idx = dat.idx;
+
+    if (idx == null) throw new Error('write collect has no idx');
+
+    cabBit.bits[idx] = dat.dex;
+
+
+
+  } else {
+    var cabDat = cabBit.bitList[cabBit.bits[bal.idx]];
+
+    bal.dat;
+
+
+
+    val = 1;
+
+    for (var key in bal.dat) {
+      if (cabDat == null) cabDat = {};
+      cabDat[key] = bal.dat[key];
+    }
+
+    cabBit.bitList[cabBit.bits[bal.idx]] = cabDat;
+    dat = cabDat;
+
+
+
+    //!!! SUPER IMPORTANT
+  }
+
+  if (dat == null && bal.slv != null)
+    bal.slv({ rskBit: { idx: 'write-collect-err', src: 'no-dat' } });
+
+  if (bal.slv != null) bal.slv({ clcBit: { idx: 'write-collect', val, dat } });
+
+  return cpy;
+};
+
+export const createCollect = (
+  cpy: CollectModel,
+  bal: CollectBit,
+  ste: State,
+) => {
+  var cabBit: CaboodleBit = { idx: bal.idx, dex: 0, bits: {}, bitList: [] };
+  cabBit.dex = cpy.caboodleBitList.length;
+
+  cpy.caboodleBitList.push(cabBit);
+  cpy.caboodleBits[cabBit.idx] = cabBit.dex;
+
+  if (bal.slv != null)
+    bal.slv({ clcBit: { idx: 'create-collect', dat: cabBit } });
+
+  return cpy;
+};
+
+export const removeCollect = async (
+  cpy: CollectModel,
+  bal: CollectBit,
+  ste: State,
+) => {
+  var type = bal.bit.split(' ').slice(-1).pop().toLowerCase();
+
+  if (cpy.caboodleBits[type] == null)
+    return bal.slv({ rskBit: { idx: 'remove-collect-not-present' } });
+
+  var cabBit: CaboodleBit = cpy.caboodleBitList[cpy.caboodleBits[type]];
+
+  if (cabBit.bits[bal.idx] == null)
+    return bal.slv({ rskBit: { idx: 'remove-collect-idx-not-present' } });
+
+  bit = await ste.hunt(bal.bit, { idx: bal.idx, src: bal.src, dat: bal.dat });
+  var objDat = bit[Object.keys(bit)[0]];
+  dat = objDat.dat;
+
+  dex = dat.dex;
+
+  for (var i = dex; i < cabBit.bitList.length - 1; i++) {
+    var update = cabBit.bitList[i];
+    update.dex -= 1;
+  }
+
+  for (var key in dat) {
+    dat[key] = null;
+  }
+
+  delete cabBit.bits[bal.idx];
+  var itm = cabBit.bitList.splice(dex, 1);
+
+  cabBit.dex -= 1;
+
+  if (bal.slv != null)
+    bal.slv({ clcBit: { idx: 'remove-collect', dat: itm[0] } });
+
+  return cpy;
+};
+
+export const putCollect = (cpy: CollectModel, bal: CollectBit, ste: State) => {
+  cpy.caboodleBits[bal.idx] = bal.val;
+  cpy.caboodleBitList[bal.val] = bal.dat;
+
+  if (bal.slv != null)
+    bal.slv({ clcBit: { idx: 'put-collect', dat: bal.dat } });
+  return cpy;
+};
+
+export const getCollect = (cpy: CollectModel, bal: CollectBit, ste: State) => {
+  val = cpy.caboodleBits[bal.idx];
+  dat = cpy.caboodleBitList[val];
+
+  if (bal.slv != null) bal.slv({ clcBit: { idx: 'get-collect', val, dat } });
+  return cpy;
+};
+
+export const modelCollect = (
+  cpy: CollectModel,
+  bal: CollectBit,
+  ste: State,
+) => {
+  //debugger
+
+  if (bal.slv != null) bal.slv({ clcBit: { idx: 'model-collect', dat: cpy } });
+  return cpy;
+};
+
+export const deleteCollect = (
+  cpy: CollectModel,
+  bal: CollectBit,
+  ste: State,
+) => {
+  //debugger
+  return cpy;
+};
+
+export const emptyCollect = (
+  cpy: CollectModel,
+  bal: CollectBit,
+  ste: State,
+) => {
+  //debugger
+  return cpy;
+};
+
+export const dotCollect = (cpy: CollectModel, bal: CollectBit, ste: State) => {
+  var gel = bal.dat;
+  var out = [];
+
+  bal.src.split('\n').forEach((a, b) => {
+    if (a.includes('//') == true) return;
+    var doTCompiled = doT.template(a);
+    var outLine = doTCompiled(gel);
+    out.push(outLine);
+  });
+
+  if (bal.slv != null)
+    bal.slv({ clcBit: { idx: 'dot-vurt', lst: out, src: out.join('\n') } });
+
+  return cpy;
+};
+
+export const formatCollect = (
+  cpy: CollectModel,
+  bal: CollectBit,
+  ste: State,
+) => {
+  lst = bal.src.split(':');
+
+  var idx = lst[0];
+
+  var out = [];
+
+  idx = S(idx).collapseWhitespace().s;
+  var opt = lst[1].split(',');
+  opt.forEach((a, b) => {
+    var now = S(a).collapseWhitespace().s;
+    if (a.length < 1) return;
+    out.push(now);
+  });
+
+  dat = [idx, out];
+
+  bal.slv({ clcBit: { idx: 'format-collect', dat } });
+  return cpy;
+};
+
+export const listCollect = (cpy: CollectModel, bal: CollectBit, ste: State) => {
+
+
+
+  var type = bal.bit.split(' ').slice(-1).pop().toLowerCase();
+  if (cpy.caboodleBits[type] == null) createCollect(cpy, { idx: type }, ste);
+
+  var cabBit: CaboodleBit = cpy.caboodleBitList[cpy.caboodleBits[type]];
+
+  lst = [];
+
+  cabBit.bitList.forEach((a) => {
+    if (a.idx != null) lst.push(a.idx);
+    if (a.id != null) lst.push(a.id);
+  });
+
+
+
+  bal.slv({ clcBit: { idx: 'list-collect', lst } });
+
+  return cpy;
+};
+
+export const hashCollect = (cpy: CollectModel, bal: CollectBit, ste: State) => {
+  if (bal.src == null) bal.src = '';
+  lst = bal.src.split('\n');
+
+  dat = {};
+
+  lst.forEach((a) => {
+    a = S(a).collapseWhitespace().s;
+    if (a.length < 3) return;
+
+    var hold = a.split(':');
+
+    var dom = hold[0];
+    var sub = hold[1];
+
+    var now = sub.split(',');
+
+    now.forEach((b, c) => {
+      now[c] = S(b).collapseWhitespace().s;
+    });
+
+    dat[dom] = now;
+  });
+
+  bal.slv({ clcBit: { idx: 'hash-collect', dat } });
+
+  return cpy;
+};
+
+import { Action } from "../99.core/interface/action.interface";
+import  CollectBit  from "./fce/collect.bit";
+
+// Collect actions
+
+export const INIT_COLLECT = "[Collect action] Init Collect";
+export class InitCollect implements Action {
+ readonly type = INIT_COLLECT;
+ constructor(public bale: CollectBit) {}
+}
+
+export const UPDATE_COLLECT = "[Collect action] Update Collect";
+export class UpdateCollect implements Action {
+ readonly type = UPDATE_COLLECT;
+ constructor(public bale: CollectBit) {}
+}
+
+export const FETCH_COLLECT = "[Collect action] Fetch Collect";
+export class FetchCollect implements Action {
+ readonly type = FETCH_COLLECT;
+ constructor(public bale: CollectBit) {}
+}
+
+export const READ_COLLECT = "[Read action] Read Collect";
+ export class ReadCollect implements Action {
+ readonly type = READ_COLLECT;
+ constructor(public bale: CollectBit) {}
+ }
+
+export const WRITE_COLLECT = "[Write action] Write Collect";
+ export class WriteCollect implements Action {
+ readonly type = WRITE_COLLECT;
+ constructor(public bale: CollectBit) {}
+ }
+
+export const CREATE_COLLECT = "[Create action] Create Collect";
+ export class CreateCollect implements Action {
+ readonly type = CREATE_COLLECT;
+ constructor(public bale: CollectBit) {}
+ }
+
+ export const REMOVE_COLLECT = "[Create action] Remove Collect";
+ export class RemoveCollect implements Action {
+ readonly type = REMOVE_COLLECT;
+ constructor(public bale: CollectBit) {}
+ }
+
+ export const DELETE_COLLECT = "[Create action] Delete Collect";
+ export class DeleteCollect implements Action {
+ readonly type = DELETE_COLLECT;
+ constructor(public bale: CollectBit) {}
+ }
+
+export const EMPTY_COLLECT = "[Empty action] Empty Collect";
+ export class EmptyCollect implements Action {
+ readonly type = EMPTY_COLLECT;
+ constructor(public bale: CollectBit) {}
+ }
+
+
+ export const MODEL_COLLECT = "[Empty action] Model Collect";
+ export class ModelCollect implements Action {
+ readonly type = MODEL_COLLECT;
+ constructor(public bale: CollectBit) {}
+ }
+
+ export const PUT_COLLECT = "[Empty action] Put Collect";
+ export class PutCollect implements Action {
+ readonly type = PUT_COLLECT;
+ constructor(public bale: CollectBit) {}
+ }
+
+ export const GET_COLLECT = "[Empty action] Get Collect";
+ export class GetCollect implements Action {
+ readonly type = GET_COLLECT;
+ constructor(public bale: CollectBit) {}
+ }
+
+
+export const FORMAT_COLLECT = "[Format action] Format Collect";
+ export class FormatCollect implements Action {
+ readonly type = FORMAT_COLLECT;
+ constructor(public bale: CollectBit) {}
+ }
+
+ export const DOT_COLLECT = "[Format action] Dot Collect";
+ export class DotCollect implements Action {
+ readonly type = DOT_COLLECT;
+ constructor(public bale: CollectBit) {}
+ }
+
+export const LIST_COLLECT = "[List action] List Collect";
+ export class ListCollect implements Action {
+ readonly type = LIST_COLLECT;
+ constructor(public bale: CollectBit) {}
+ }
+
+export const HASH_COLLECT = "[Hash action] Hash Collect";
+ export class HashCollect implements Action {
+ readonly type = HASH_COLLECT;
+ constructor(public bale: CollectBit) {}
+ }
+
+export type Actions = | InitCollect | UpdateCollect
+| ReadCollect
+| WriteCollect
+| CreateCollect
+| EmptyCollect
+| FetchCollect
+| DeleteCollect
+| RemoveCollect
+| ModelCollect
+| GetCollect
+| PutCollect
+| FormatCollect
+| DotCollect
+| ListCollect
+| HashCollect
+export { initCollect  } from "./buz/collect.buzz";
+export { updateCollect  } from "./buz/collect.buzz";
+export { readCollect  } from "./buz/collect.buzz";
+export { writeCollect  } from "./buz/collect.buzz";
+export { createCollect  } from "./buz/collect.buzz";
+export { emptyCollect  } from "./buz/collect.buzz";
+export { fetchCollect  } from "./buz/collect.buzz";
+export { deleteCollect  } from "./buz/collect.buzz";
+export { removeCollect  } from "./buz/collect.buzz";
+export { modelCollect  } from "./buz/collect.buzz";
+export { putCollect  } from "./buz/collect.buzz";
+export { getCollect  } from "./buz/collect.buzz";
+export { formatCollect  } from "./buz/collect.buzz";
+export { dotCollect  } from "./buz/collect.buzz";
+export { listCollect  } from "./buz/collect.buzz";
+export { hashCollect  } from "./buz/collect.buzz";
+import CaboodleBit from "./fce/caboodle.bit";
+import Collect from "./fce/collect.interface";
+import CollectBit from "./fce/collect.interface";
+
+export class CollectModel implements Collect {
+ idx:string = '23.11.14';
+ caboodleBitList: CaboodleBit[] = [];
+ caboodleBits: any = {};
+}
+
+import * as clone from "clone-deep";
+import * as Act from "./collect.action";
+import { CollectModel } from "./collect.model";
+import * as Buzz from "./collect.buzzer";
+import State from "../99.core/state";
+
+export function reducer(model: CollectModel = new CollectModel(), act: Act.Actions, state?: State) {
+   switch (act.type) {
+
+      case Act.UPDATE_COLLECT:
+         return Buzz.updateCollect(clone(model), act.bale, state);
+
+      case Act.INIT_COLLECT:
+         return Buzz.initCollect(clone(model), act.bale, state);
+
+      case Act.READ_COLLECT:
+         return Buzz.readCollect(clone(model), act.bale, state);
+
+      case Act.WRITE_COLLECT:
+         return Buzz.writeCollect(clone(model), act.bale, state);
+
+      case Act.CREATE_COLLECT:
+         return Buzz.createCollect(clone(model), act.bale, state);
+
+      case Act.DELETE_COLLECT:
+         return Buzz.deleteCollect(clone(model), act.bale, state);
+
+      case Act.REMOVE_COLLECT:
+         return Buzz.removeCollect(clone(model), act.bale, state);
+
+      case Act.EMPTY_COLLECT:
+         return Buzz.emptyCollect(clone(model), act.bale, state);
+
+      case Act.FETCH_COLLECT:
+         return Buzz.fetchCollect(clone(model), act.bale, state);
+
+      case Act.MODEL_COLLECT:
+         return Buzz.modelCollect(clone(model), act.bale, state);
+
+      case Act.GET_COLLECT:
+         return Buzz.getCollect(clone(model), act.bale, state);
+
+      case Act.PUT_COLLECT:
+         return Buzz.putCollect(clone(model), act.bale, state);
+
+      case Act.FORMAT_COLLECT:
+         return Buzz.formatCollect(clone(model), act.bale, state);
+
+      case Act.DOT_COLLECT:
+         return Buzz.dotCollect(clone(model), act.bale, state);
+
+case Act.LIST_COLLECT:
+ return Buzz.listCollect(clone(model), act.bale, state);
+
+case Act.HASH_COLLECT:
+ return Buzz.hashCollect(clone(model), act.bale, state);
+
+      default:
+         return model;
+   }
+}
+
+import State from "../99.core/state";
+
+
+export default class CollectUnit {
+
+    constructor(state: State) {
+    }
+}
+
+
+export default interface CaboodleBit {
+ idx:string;
+ dex:number;
+ bitList: any[];
+ bits: any;
+}
+
+
+export default interface CollectBit {
+ idx?:string;
+ src?:string;
+ val?:number;
+ dex?:number;
+ dat?:any;
+ bit?:any;
+ slv?:Function;
+}
+
+
+import  CollectBit  from "./collect.bit";
+import CaboodleBit from "./caboodle.bit";
+
+export default interface Collect {
+  idx:string;
+  caboodleBitList: CaboodleBit[];
+  caboodleBits:any;
+}
+
+import { Action } from "../99.core/interface/action.interface";
+import  BusBit  from "./fce/bus.bit";
+
+// Bus actions
+
+export const INIT_BUS = "[Bus action] Init Bus";
+export class InitBus implements Action {
+ readonly type = INIT_BUS;
+ constructor(public bale: BusBit) {}
+}
+
+export const OPEN_BUS = "[Bus action] Open Bus";
+export class OpenBus implements Action {
+ readonly type = OPEN_BUS;
+ constructor(public bale: BusBit) {}
+}
+
+export const CONNECT_BUS = "[Bus action] Connect Bus";
+export class ConnectBus implements Action {
+ readonly type = CONNECT_BUS;
+ constructor(public bale: BusBit) {}
+}
+
+export const MESSAGE_BUS = "[Bus action] Message Bus";
+export class MessageBus implements Action {
+ readonly type = MESSAGE_BUS;
+ constructor(public bale: BusBit) {}
+}
+
+export const UPDATE_BUS = "[Bus action] Update Bus";
+export class UpdateBus implements Action {
+ readonly type = UPDATE_BUS;
+ constructor(public bale: BusBit) {}
+}
+
+export const CREATE_BUS = "[Bus action] Create Bus";
+export class CreateBus implements Action {
+ readonly type = CREATE_BUS;
+ constructor(public bale: BusBit) {}
+}
+
+export type Actions = | InitBus | OpenBus | UpdateBus |ConnectBus |MessageBus | CreateBus;
+
+export { initBus  } from "./buz/bus.buzz";
+export { openBus  } from "./buz/bus.buzz";
+export { updateBus  } from "./buz/bus.buzz";
+export { connectBus  } from "./buz/bus.buzz";
+export { messageBus  } from "./buz/bus.buzz";
+export { createBus  } from "./buz/bus.buzz";
+
+import Bus from "./fce/bus.interface";
+import BusBit from "./fce/bus.interface";
+
+export class BusModel implements Bus {
+ MQTT:any;
+ //idx:string;
+ //busBitList: BusBit[] = [];
+ //busBits: any = {};
+ actList:any;
+ client:any;
+ host:string = "mqtt://localhost:1883";
+ bus:Function;
+ responseSuffix:string = '-response'
+ promises:any = {}
+
+}
+
+import * as clone from "clone-deep";
+import * as Act from "./bus.action";
+import { BusModel } from "./bus.model";
+import * as Buzz from "./bus.buzzer";
+import State from "../99.core/state";
+
+export function reducer(model: BusModel = new BusModel(), act: Act.Actions,  state?: State ) {
+ switch (act.type) {
+
+ case Act.UPDATE_BUS:
+ return Buzz.updateBus(clone(model), act.bale, state);
+
+ case Act.OPEN_BUS:
+ return Buzz.openBus(clone(model), act.bale, state);
+
+ case Act.CONNECT_BUS:
+ return Buzz.connectBus(clone(model), act.bale, state);
+
+ case Act.CREATE_BUS:
+ return Buzz.createBus(clone(model), act.bale, state);
+
+ case Act.MESSAGE_BUS:
+ return Buzz.connectBus(clone(model), act.bale, state);
+
+ case Act.INIT_BUS:
+ return Buzz.initBus(clone(model), act.bale, state);
+
+ default:
+ return model;
+ }
+}
+
+import State from "../99.core/state";
+
+
+export default class BusUnit {
+
+ constructor(state: State) {
+ }
+}
+
+import * as ActBus from "../../99.bus.unit/bus.action";
+import * as ActCol from "../../97.collect.unit/collect.action";
+
+import { BusModel } from "../bus.model";
+import BusBit from "../fce/bus.bit";
+import State from "../../99.core/state";
+import S from "string";
+import * as clone from "clone-deep";
+
+var lst, idx, bit, src, dat, dex;
+
+export const initBus = (cpy: BusModel, bal: BusBit, ste: State) => {
+
+  cpy.actList = []
+
+  if (bal == null) bal = { idx: null }
+  if (bal.lst == null) bal.lst = []
+
+  if ((bal.src != null) && (bal.src.constructor == Array)) lst = bal.src;
+
+  bal.lst.forEach((a) => {
+    for (var key in a) {
+      cpy.actList.push(a[key])
+    }
+  })
+
+  ste.bus = (idx, dat, bit) => updateBus(cpy, { idx, dat, bit }, ste)
+
+  if (bal.dat != null) {
+    cpy.MQTT = bal.dat;
+  }
+  else {
+    console.log("return promise")
+  }
+
+  if (lst == null) {
+
+    if (bal.src != null) cpy.host = bal.src
+    cpy.client = cpy.MQTT.connect(cpy.host);
+    cpy.client.on('message', (tpc, msg) => { messageBus(cpy, { idx: tpc, src: msg }, ste) })
+    cpy.client.on('connect', () => {
+      console.log(bal.idx + " connected " + cpy.host)
+      openBus(cpy, { idx: 'init-bus', lst: cpy.actList }, ste)
+      if (bal.slv != null) bal.slv({ intBit: { idx: "init-bus" } })
+    })
+  } else {
+
+    var complete = (lst) => {
+      lst.shift()
+
+      if (lst.length != 0) return
+
+      if (bal.slv != null) bal.slv({ intBit: { idx: "init-bus" } })
+    }
+
+
+    lst.forEach(async (a) => {
+
+
+      bit = await ste.hunt(ActCol.WRITE_COLLECT, { idx: a.idx, src: a.src, bit: ActBus.CREATE_BUS })
+
+      var client = bit.clcBit.dat;
+
+      client.on('message', (tpc, msg) => { messageBus(cpy, { idx: tpc, src: msg, bit: a.idx }, ste) })
+      client.on('connect', () => {
+        console.log(a.idx + " connected " + a.src)
+        openBus(cpy, { idx: 'init-bus', lst: cpy.actList, bit: a.idx }, ste)
+        complete(lst)
+      })
+
+    })
+  }
+
+
+  return cpy;
+};
+
+export const createBus = (cpy: BusModel, bal: BusBit, ste: State) => {
+
+  var client = cpy.MQTT.connect(bal.src);
+  if (bal.slv != null) bal.slv({ busBit: { idx: "create-bus", dat: client } });
+
+  //client.on('message', (tpc, msg) => { messageBus(cpy, { idx: tpc, src: msg, bit:bal.idx }, ste) })
+  //client.on('connect', () => {
+  //console.log(bal.idx + " connected " + bal.src)
+  //openBus(cpy, { idx: 'init-bus', lst: cpy.actList, bit:bal.idx }, ste)
+  //})
+
+  return cpy;
+}
+
+export const openBus = async (cpy: BusModel, bal: BusBit, ste: State) => {
+
+
+  var out = []
+
+  bal.lst.forEach((a) => {
+    if (a == null) return
+    if (a.includes == null) return
+    if (a.includes('[') && a.includes(']') == false) return
+    out.push(a)
+  })
+
+  var client = cpy.client;
+
+  if (bal.bit != null) {
+    bit = await ste.hunt(ActCol.READ_COLLECT, { idx: bal.bit, bit: ActBus.CREATE_BUS })
+    client = bit.clcBit.dat
+  }
+
+  out.forEach((a) => {
+
+    client.subscribe(a, (err) => {
+
+      if (!err) {
+        console.log('subscribing ' + a)
+      }
+    })
+
+  })
+
+
+
+  return cpy;
+};
+
+export const connectBus = (cpy: BusModel, bal: BusBit, ste: State) => {
+
+  var lst = []
+  //if (bal.val == 1) patch(ste, ActMnu.INIT_MENU, { lst })
+}
+
+export const messageBus = async (cpy: BusModel, bal: BusBit, ste: State) => {
+
+
+  if (bal.src != null) dat = bal.src.toString()
+
+  idx = bal.idx
+  dat = JSON.parse(dat)
+
+  var client = cpy.client;
+
+  if (bal.bit != null) {
+    bit = await ste.hunt(ActCol.READ_COLLECT, { idx: bal.bit, bit: ActBus.CREATE_BUS })
+    client = bit.clcBit.dat
+  }
+
+  if (idx.includes(cpy.responseSuffix) == true) {
+
+    var responseIDX = bal.idx;
+    var obj = cpy.promises[responseIDX];
+
+    if (obj.slv != null) obj.slv(dat);
+
+    client.unsubscribe(responseIDX, (err) => {
+      if (!err) {
+        //console.log('hitting ' + responseIDX)
+      }
+    })
+
+  } else {
+    var bit = await ste.hunt(idx, dat)
+    var cloneBit = clone(bit)
+
+    for (var key in cloneBit) {
+
+      var itm = cloneBit[key]
+      if (itm.dat != null) {
+        if (itm.dat.bit != null) itm.dat.bit = null
+      }
+    }
+
+    cloneBit
+
+    client.publish(bal.idx + cpy.responseSuffix, JSON.stringify( cloneBit ))
+  }
+
+  return cpy;
+};
+
+
+//has to return a promise
+export const updateBus = async (cpy: BusModel, bal: BusBit, ste: State) => {
+
+
+  //how does one create an error message here when bit should be used
+  var client = cpy.client;
+
+  if (bal.bit != null) {
+    bit = await ste.hunt(ActCol.READ_COLLECT, { idx: bal.bit, bit: ActBus.CREATE_BUS })
+    client = bit.clcBit.dat
+  }
+
+  if ((client == null) && (bal.bit == null)) {
+    bit = await ste.hunt(ActCol.FETCH_COLLECT, { bit: ActBus.CREATE_BUS })
+    client = bit.clcBit.dat
+  }
+
+  var responseIDX = bal.idx + cpy.responseSuffix;
+
+  var slv;
+  const promo = new Promise((rslv, rjct) => (slv = rslv));
+
+  var obj = { slv: (val0) => slv(val0) };
+
+  cpy.promises[responseIDX] = obj
+
+  client.subscribe(responseIDX, (err) => {
+    if (!err) {
+      //console.log('hitting ' + responseIDX)
+    }
+  })
+
+  //03.10.23
+  //bit throws errors since sometimes it is not a primitive
+  //if (bal.dat == null) bal.dat = {}
+  //if (bal.dat.bit != null) bal.dat.bit = null;
+
+  client.publish(bal.idx, JSON.stringify(bal.dat))
+
+  return promo;
+};
+
+
+var patch = (ste, type, bale) => ste.dispatch({ type, bale });
+
+
+export default interface BusBit {
+ idx:string;
+ val?:number;
+ lst?:any;
+ src?:any;
+ bit?:string;
+ slv?:Function;
+ dat?:any;
+}
+
+
+import  BusBit  from "./bus.bit";
+
+export default interface Bus {
+ // idx:string;
+ // busBitList: BusBit[];
+ // busBits:any;
+
+}
+
+export interface Action<T = any> {
+    type: string;
+    bale?: T;
+}
+
+export interface Action<T = any> {
+  type: string;
+  bale?: T;
+}
+
+export default interface Model {}
+
+import { BehaviorSubject } from "rx-lite";
+import { Subject } from "rx-lite";
+import { Action } from "./interface/action.interface";
+
+import UnitModel from "../BEE";
+import * as Effect from "../BEE";
+
+export default class State extends BehaviorSubject<any> {
+  public hunt: any;
+  public value: any;
+  public pivot:  any;
+  public bus: any;
+
+  private dispatcher: Subject = new Subject();
+
+  constructor(init: UnitModel = new UnitModel()) {
+    super(init);
+
+    this.dispatcher
+      .scan((state, action) => this.reducedApp(state, action), init)
+      .subscribe((state) => {
+        super.onNext(state);
+      });
+  }
+
+  reducedApp(nextState: any, key: any) {
+    for (var k in Effect.reducer) Effect.reducer[k](nextState[k], key, this);
+    return nextState;
+  }
+
+  dispatch(value: Action) {
+    var result = this.dispatcher.onNext(value);
+    return result;
+  }
+
+  pat(value: Action) {
+    this.dispatch(value);
+  }
+
+  next(value: any) {
+    this.dispatcher.onNext(value);
+  }
+}
+
+export const INIT_CLOCK = "[Clock action] Init Clock";
+export const UPDATE_CLOCK = "[Clock action] Update Clock";
+export const READ_CLOCK = "[Read action] Read Clock";
+export const WRITE_CLOCK = "[Write action] Write Clock";
+export const REMOVE_CLOCK = "[Remove action] Remove Clock";
+export const CREATE_CLOCK = "[Create action] Create Clock";
+export const DELETE_CLOCK = "[Delete action] Delete Clock";
+export const BLOCK_CLOCK = "[Block action] Block Clock";
+export const LIST_CLOCK = "[List action] List Clock";
+export const TEST_CLOCK = "[Test action] Test Clock";
+export const INIT_COLOR = "[Color action] Init Color";
+export const UPDATE_COLOR = "[Color action] Update Color";
+export const OPEN_COLOR = "[Open action] Open Color";
+export const READ_COLOR = "[Read action] Read Color";
+export const WRITE_COLOR = "[Write action] Write Color";
+export const REMOVE_COLOR = "[Remove action] Remove Color";
+export const DELETE_COLOR = "[Delete action] Delete Color";
+export const CREATE_COLOR = "[Create action] Create Color";
+export const LIST_COLOR = "[List action] List Color";
+export const RANDOM_COLOR = "[Random action] Random Color";
+export const BASKET_COLOR = "[Basket action] Basket Color";
+export const ACCESS_COLOR = "[Access action] Access Color";
+export const INIT_FOCUS = "[Focus action] Init Focus";
+export const AWAKE_FOCUS = "[Focus action] Awake Focus";
+export const UPDATE_FOCUS = "[Focus action] Update Focus";
+export const OPEN_FOCUS = "[Focus action] Open Focus";
+export const CREATE_FOCUS = "[Focus action] Create Focus";
+export const READ_FOCUS = "[Read action] Read Focus";
+export const WRITE_FOCUS = "[Write action] Write Focus";
+export const REMOVE_FOCUS = "[Remove action] Remove Focus";
+export const DELETE_FOCUS = "[Delete action] Delete Focus";
+export const CORNER_FOCUS = "[Corner action] Corner Focus";
+export const LIST_FOCUS = "[List action] List Focus";
+ export const SPIN_RIGHT_FOCUS = "[List action] Spin Left Focus";
+ export const SPIN_LEFT_FOCUS = "[List action] Spin Right Focus";
+ export const FORWARD_FOCUS = "[List action] Forward Focus";
+ export const BACKWARD_FOCUS = "[List action] Backward Focus";
+ export const CENTER_FOCUS = "[List action] Center Focus";
+export const BOND_FOCUS = "[Bond action] Bond Focus";
+export const LOCATE_FOCUS = "[Locate action] Locate Focus";
+export const VISION_FOCUS = "[Vision action] Vision Focus";
+export const SELECT_FOCUS = "[Select action] Select Focus";
+ export const MODEL_FOCUS = "[Select action] Model Focus";
+ export const BROWNIAN_FOCUS = "[Select action] Brownian Focus";
+export const INIT_HEXMAP = "[Hexmap action] Init Hexmap";
+export const UPDATE_HEXMAP = "[Hexmap action] Update Hexmap";
+export const OPEN_HEXMAP = "[Hexmap action] Open Hexmap";
+export const READ_HEXMAP = "[Read action] Read Hexmap";
+export const WRITE_HEXMAP = "[Write action] Write Hexmap";
+export const CREATE_HEXMAP = "[Create action] Create Hexmap";
+export const COPY_HEXMAP = "[Copy action] Copy Hexmap";
+export const ATLAS_HEXMAP = "[Atlas action] Atlas Hexmap";
+export const GEOJSON_HEXMAP = "[Geojson action] Geojson Hexmap";
+export const TOOL_HEXMAP = "[Tool action] Tool Hexmap";
+export const SAVE_HEXMAP = "[Save action] Save Hexmap";
+export const STORE_HEXMAP = "[Store action] Store Hexmap";
+export const SHAPE_HEXMAP = "[Shape action] Shape Hexmap";
+export const LOAD_HEXMAP = "[Load action] Load Hexmap";
+export const LIST_HEXMAP = "[List action] List Hexmap";
+export const REPLACE_HEXMAP = "[Replace action] Replace Hexmap";
+export const NAME_HEXMAP = "[Name action] Name Hexmap";
+export const SEEK_HEXMAP = "[Seek action] Seek Hexmap";
+export const FOCUSING_HEXMAP = "[Focusing action] Focusing Hexmap";
+export const DEFOCUS_HEXMAP = "[Defocus action] Defocus Hexmap";
+export const SELECT_HEXMAP = "[Select action] Select Hexmap";
+export const ADD_HEXMAP = "[Select action] Add Hexmap";
+export const POUCH_HEXMAP = "[Select action] Pouch Hexmap";
+export const INIT_INCREMENT = "[Increment action] Init Increment";
+export const UPDATE_INCREMENT = "[Increment action] Update Increment";
+export const READ_INCREMENT = "[Read action] Read Increment";
+export const WRITE_INCREMENT = "[Write action] Write Increment";
+export const REMOVE_INCREMENT = "[Remove action] Remove Increment";
+export const DELETE_INCREMENT = "[Delete action] Delete Increment";
+export const CREATE_INCREMENT = "[Create action] Create Increment";
+export const LIST_INCREMENT = "[List action] List Increment";
+export const INIT_PROGRESS = "[Progress action] Init Progress";
+export const UPDATE_PROGRESS = "[Progress action] Update Progress";
+
+export const INIT_SPARK = "[Spark action] Init Spark";
+export const UPDATE_SPARK = "[Spark action] Update Spark";
+export const READ_SPARK = "[Read action] Read Spark";
+export const WRITE_SPARK = "[Write action] Write Spark";
+export const REMOVE_SPARK = "[Remove action] Remove Spark";
+export const DELETE_SPARK = "[Delete action] Delete Spark";
+export const CREATE_SPARK = "[Create action] Create Spark";
+export const INIT_TIME = "[Time action] Init Time";
+export const UPDATE_TIME = "[Time action] Update Time";
+export const TEST_TIME = "[Reduce action] Test Time";
+export const RANDOM_TIME = "[Random action] Random Time";
+
+import Model from "./99.core/interface/model.interface";
+
+import glopsUnit from "./00.glops.unit/glops.unit";
+import WorldUnit from "./01.world.unit/world.unit";
+import FateUnit from "./02.fate.unit/fate.unit";
+import ColorUnit from "./03.color.unit/color.unit";
+import CollectUnit from "./97.collect.unit/collect.unit";
+import BusUnit from "./99.bus.unit/bus.unit";
+
+
+import Glops from "./00.glops.unit/fce/glops.interface";
+import { GlopsModel } from "./00.glops.unit/glops.model";
+import World from "./01.world.unit/fce/world.interface";
+import { WorldModel } from "./01.world.unit/world.model";
+import Fate from "./02.fate.unit/fce/fate.interface";
+import { FateModel } from "./02.fate.unit/fate.model";
+import Color from "./03.color.unit/fce/color.interface";
+import { ColorModel } from "./03.color.unit/color.model";
+import Collect from "./97.collect.unit/fce/collect.interface";
+import { CollectModel } from "./97.collect.unit/collect.model";
+import Bus from "./99.bus.unit/fce/bus.interface";
+import { BusModel } from "./99.bus.unit/bus.model";
+
+
+export const list: Array<any> = [glopsUnit,WorldUnit,FateUnit,ColorUnit,CollectUnit,BusUnit];
+
+import * as reduceFromglops from "./00.glops.unit/glops.reduce";
+import * as reduceFromWorld from "./01.world.unit/world.reduce";
+import * as reduceFromFate from "./02.fate.unit/fate.reduce";
+import * as reduceFromColor from "./03.color.unit/color.reduce";
+import * as reduceFromCollect from "./97.collect.unit/collect.reduce";
+import * as reduceFromBus from "./99.bus.unit/bus.reduce";
+
+
+export const reducer: any = {
+ glops : reduceFromglops.reducer,
+ world : reduceFromWorld.reducer,
+ fate : reduceFromFate.reducer,
+ color : reduceFromColor.reducer,
+collect : reduceFromCollect.reducer,
+bus : reduceFromBus.reducer,
+
+};
+
+export default class UnitData implements Model {
+
+
+ glops : Glops = new GlopsModel();
+
+ world : World = new WorldModel();
+ fate : Fate = new FateModel();
+ color : Color = new ColorModel();
+collect : Collect = new CollectModel();
+bus : Bus = new BusModel();
+
+
+}
+
+var sim = {
+  hunt:null,
+  state: null
+};
+
+sim.hunt = (typ,obj) =>{return host(obj, typ)}
+
+var host = (obj, typ) => {
+  init();
+
+  var slv;
+  const promo = new Promise((rslv, rjct) => (slv = rslv));
+
+  if (obj == null) obj = {};
+  if (obj.slv == null) obj.slv = (val0) => slv(val0);
+
+  sim.state.dispatch({ type: typ, bale: obj });
+  return promo;
+};
+
+var init = () => {
+  if (sim.state != null) return;
+  sim.state = new State();
+  sim.state.pivot = sim;
+  sim.state.hunt = sim.hunt
+  for (var k in Import.list) new Import.list[k](sim.state);
+};
+
+import * as Import from "./BEE";
+import State from "./99.core/state";
+
+module.exports = sim;
+export const HOURS = "incHrs";
+export const MINUTES = "incMin";
+export const DAYS = "incDay";
+export const SECONDS = "incSec";
+export const DEFAULT = "incDft";
+
+export const CONTROL = "CONTROL";
+export const TIME = "TIME";
+export const SPACE = "SPACE";
+export const EARTH = "EARTH";
+export const SOWER = "SOWER";
+export const SHADE = "SHADE";
+export const SOLID = "SOLID";
+export const MARKET = "MARKET";
+export const LIBRARY = "LIBRARY";
+
 import * as ActMnu from "../../98.menu.unit/menu.action";
 import * as ActBus from "../../99.bus.unit/bus.action";
 import * as ActShd from "../../00.shade.unit/shade.action";
@@ -32628,6 +35418,7 @@ export const updateMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
     ActDif.UPDATE_DIFFUSION,
     ActSrv.UPDATE_SERVER,
     ActMnu.EARTH_MENU,
+    ActMnu.GLOPS_MENU,
     ActDat.FRAME_DATA,
     ActMnu.OLLAMA_MENU,
     ActMnu.CONTROL_MENU,
@@ -32801,6 +35592,10 @@ export const updateMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
 
     case ActMnu.EARTH_MENU:
       bit = await ste.hunt(ActMnu.EARTH_MENU, {})
+      break;
+
+    case ActMnu.GLOPS_MENU:
+      bit = await ste.hunt(ActMnu.GLOPS_MENU, {})
       break;
 
     case ActLib.UPDATE_LIBRARY:
@@ -33143,6 +35938,127 @@ var patch = (ste, type, bale) => ste.dispatch({ type, bale });
 
 
 
+
+import * as ActMnu from "../menu.action";
+const path = require('path');
+var exec = require('child_process').exec;
+
+import * as ActGlp from "../../act/glops.action";
+
+import { MenuModel } from "../menu.model";
+import MenuBit from "../fce/menu.bit";
+import State from "../../99.core/state";
+
+import * as Align from '../../val/align'
+import * as Color from '../../val/console-color';
+
+import * as ActTrm from "../../act/terminal.action";
+import * as ActChc from "../../act/choice.action";
+
+import * as ActGrd from "../../act/grid.action";
+import * as ActClr from "../../act/color.action";
+
+import * as PVT from '../../val/pivot'
+
+var bit, lst, dex, idx, dat, src;
+
+var GLOPS, TIME, SPACE, SOWER;
+
+export const glopsMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
+
+  var FS = require('fs-extra')
+
+  await (async () => {
+    try {
+
+      if (global.GLOPS == null) await new Promise<void>((resolve, reject) => exec('tsc -b 020.glops', err => err ? reject(err) : resolve()));
+
+      if (global.GLOPS == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled glops" });
+      if (global.GLOPS == null) global.GLOPS = GLOPS = require(path.resolve('./dist/020.glops/hunt'));
+
+      if (global.TIME == null) await new Promise<void>((resolve, reject) => exec('tsc -b 001.time', err => err ? reject(err) : resolve()));
+
+      if (global.TIME == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled time" });
+      if (global.TIME == null) TIME = global.TIME = require(path.resolve('./dist/001.time/hunt'));
+      if (window[PVT.TIME] == null) window[PVT.TIME] = TIME.hunt
+
+      if (global.SPACE == null) await new Promise<void>((resolve, reject) => exec('tsc -b 002.space', err => err ? reject(err) : resolve()));
+
+      if (global.SPACE == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled space" });
+      if (global.SPACE == null) SPACE = global.SPACE = require(path.resolve('./dist/002.space/hunt'));
+      if (window[PVT.SPACE] == null) window[PVT.SPACE] = SPACE.hunt
+
+
+      if (global.SOWER == null) await new Promise<void>((resolve, reject) => exec('tsc -b 010.sower', err => err ? reject(err) : resolve()));
+
+      if (global.SOWER == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled sower" });
+      if (global.SOWER == null) SOWER = global.SOWER = require(path.resolve('./dist/010.sower/hunt'));
+      if (window[PVT.SOWER] == null) window[PVT.SOWER] = SOWER.hunt
+
+      lst = FS.readJsonSync('./public/data/color/000.color.name.json')
+      bit = await GLOPS.hunt(ActClr.OPEN_COLOR, { lst })
+
+    } catch (err) {
+      console.error(`exec error: ${err}`);
+      throw err;
+    }
+  })();
+
+  lst = [ ActGlp.UPDATE_GLOPS, ActGlp.ACCESS_GLOPS, ActGlp.OPEN_GLOPS, ActMnu.UPDATE_MENU]
+
+  bit = await ste.hunt(ActGrd.UPDATE_GRID, { x: 0, y: 4, xSpan: 4, ySpan: 12 })
+  bit = await ste.hunt(ActChc.OPEN_CHOICE, { dat: { clr0: Color.BLACK, clr1: Color.YELLOW }, src: Align.VERTICAL, lst, net: bit.grdBit.dat })
+
+  src = bit.chcBit.src;
+
+  switch (src) {
+
+    case ActGlp.ACCESS_GLOPS:
+      bit = await GLOPS.hunt(ActGlp.ACCESS_GLOPS, { val: 1 })
+
+      setTimeout(() => { GLOPS.hunt(ActGlp.ACCESS_GLOPS, { val: 0 }) }, 1111)
+
+      bit = await ste.hunt(ActMnu.PRINT_MENU, bit)
+      break;
+
+    case ActGlp.OPEN_GLOPS:
+      bit = await GLOPS.hunt(ActGlp.OPEN_GLOPS, {})
+      bit = await ste.hunt(ActMnu.PRINT_MENU, bit)
+      break;
+
+    case ActGlp.UPDATE_GLOPS:
+      bit = await GLOPS.hunt(ActGlp.UPDATE_GLOPS, {})
+      bit = await ste.hunt(ActMnu.PRINT_MENU, bit)
+      break;
+
+    case ActMnu.UPDATE_MENU:
+      bit = await ste.hunt(ActMnu.UPDATE_MENU, {})
+      bit = await ste.hunt(ActMnu.PRINT_MENU, bit)
+      break;
+
+    case ActMnu.UPDATE_MENU:
+      bit = await ste.hunt(ActMnu.UPDATE_MENU, {})
+      bit = await ste.hunt(ActMnu.PRINT_MENU, bit)
+      break;
+
+    default:
+      bit = await ste.bus(ActTrm.CLOSE_TERMINAL, {})
+      break;
+  }
+
+  setTimeout(async () => {
+
+    bit = await ste.hunt(ActMnu.GLOPS_MENU, {})
+
+  }, 3)
+
+
+
+  return cpy;
+};
+
+
+var patch = (ste, type, bale) => ste.dispatch({ type, bale });
 
 import { MenuModel } from "../menu.model";
 import MenuBit from "../fce/menu.bit";
@@ -34358,6 +37274,12 @@ export class EarthMenu implements Action {
   constructor(public bale: MenuBit) { }
 }
 
+export const GLOPS_MENU = "[Menu action] Glops Menu";
+export class GlopsMenu implements Action {
+  readonly type = GLOPS_MENU;
+  constructor(public bale: MenuBit) { }
+}
+
 export const OLLAMA_MENU = "[Menu action] OLLAMA Menu";
 export class OllamaMenu implements Action {
   readonly type = OLLAMA_MENU;
@@ -34448,6 +37370,7 @@ export type Actions = InitMenu | UpdateMenu | TestMenu | CloseMenu
   | SpaceMenu
   | ControlMenu
   | EarthMenu
+  | GlopsMenu
   | SowerMenu
   | MarketMenu
   | FateMenu
@@ -35241,6 +38164,12 @@ export const WRITE_FRAME = "[Write action] Write Frame";
 export const REMOVE_FRAME = "[Remove action] Remove Frame";
 export const CREATE_FRAME = "[Create action] Create Frame";
 export const DELETE_FRAME = "[Delete action] Delete Frame";
+export const INIT_GLOPS = "[glops action] Init glops";
+export const OPEN_GLOPS = "[glops action] Open glops";
+export const UPDATE_GLOPS = "[glops action] Update glops";
+export const ADVANCE_GLOPS = "[Advance action] Advance glops";
+export const OUTPUT_GLOPS = "[Output action] Output glops";
+export const ACCESS_GLOPS = "[Access action] Access glops";
 export const INIT_GRAPHIC = "[Graphic action] Init Graphic";
 export const UPDATE_GRAPHIC = "[Graphic action] Update Graphic";
 export const READ_GRAPHIC = "[Read action] Read Graphic";
