@@ -1,6 +1,9 @@
 export { initglops  } from "./buz/glops.buzz";
-export { advanceglops  } from "./buz/advanceglops.buzz";
-export { updateglops  } from "./buz/updateglops.buzz";
-export { openglops  } from "./buz/openglops.buzz";
-export { outputglops  } from "./buz/outputglops.buzz";
-export { accessglops  } from "./buz/accessglops.buzz";
+
+export { advanceGlops  } from "./buz/advanceGlops.buzz";
+export { updateGlops  } from "./buz/updateGlops.buzz";
+export { openGlops  } from "./buz/openGlops.buzz";
+export { outputGlops  } from "./buz/outputGlops.buzz";
+export { accessGlops  } from "./buz/accessGlops.buzz";
+
+

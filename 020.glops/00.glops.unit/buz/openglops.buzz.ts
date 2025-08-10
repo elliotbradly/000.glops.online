@@ -18,7 +18,11 @@ import * as Increment from '../../val/increment'
 
 var bit
 
-export const openglops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
+
+export const openGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
+
 
     if (cpy.opened == 1) {
         bal.slv({ ertBit: { idx: "open-glops", dat: { val: cpy.opened } } });
