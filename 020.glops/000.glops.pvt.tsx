@@ -46,6 +46,8 @@ var init = () => {
 };
 
 
+
 export const glops = async (typ, obj) => {
+
   return sim.hunt(typ, obj)
 }

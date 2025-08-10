@@ -61,6 +61,12 @@ export class EarthMenu implements Action {
   constructor(public bale: MenuBit) { }
 }
 
+export const GLOPS_MENU = "[Menu action] Glops Menu";
+export class GlopsMenu implements Action {
+  readonly type = GLOPS_MENU;
+  constructor(public bale: MenuBit) { }
+}
+
 export const OLLAMA_MENU = "[Menu action] OLLAMA Menu";
 export class OllamaMenu implements Action {
   readonly type = OLLAMA_MENU;
@@ -151,6 +157,7 @@ export type Actions = InitMenu | UpdateMenu | TestMenu | CloseMenu
   | SpaceMenu
   | ControlMenu
   | EarthMenu
+  | GlopsMenu
   | SowerMenu
   | MarketMenu
   | FateMenu
