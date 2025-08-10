@@ -1,4 +1,4 @@
-import { Action } from "../../../995.library/99.core/interface/action.interface";
+import { Action } from "../99.core/interface/action.interface";
 import  FormGlopBit  from "./fce/formGlop.bit";
 
 // FormGlop actions

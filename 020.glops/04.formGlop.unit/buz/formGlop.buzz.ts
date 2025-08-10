@@ -2,11 +2,10 @@ import * as ActFgp from "../formGlop.action";
 import * as ActCol from "../../97.collect.unit/collect.action";
 import * as ActBus from "../../99.bus.unit/bus.action";
 
+import { FormGlopModel } from "../formGlop.model";
+import FormGlopBit from "../fce/formGlop.bit";
 
-import * as ActVrt from "../../../act/vurt.action"
-import * as ActDsk from "../../../act/disk.action"
-import * as ActPvt from "../../../act/pivot.action"
-
+import State from "../../99.core/state";
 
 var bit, val, idx, dex, lst, dat, src;
 
@@ -56,6 +55,3 @@ export const deleteFormGlop = async (cpy: FormGlopModel, bal: FormGlopBit, ste: 
 
 
 
-import { FormGlopModel } from "../formGlop.model";
-import FormGlopBit from "../fce/formGlop.bit";
-import State from "../../../995.library/99.core/state";
