@@ -2,7 +2,7 @@ import * as clone from "clone-deep";
 import * as Act from "./formGlop.action";
 import { FormGlopModel } from "./formGlop.model";
 import * as Buzz from "./formGlop.buzzer";
-import State from "../../../995.library/99.core/state";
+import State from "../99.core/state";
 
 export function reducer(model: FormGlopModel = new FormGlopModel(), act: Act.Actions,  state?: State ) {
  switch (act.type) {

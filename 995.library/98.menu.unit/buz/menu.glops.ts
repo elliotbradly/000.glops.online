@@ -3,6 +3,7 @@ const path = require('path');
 var exec = require('child_process').exec;
 
 import * as ActGlp from "../../act/glops.action";
+import * as ActRwk from "../../act/ratchetwrk.action";
 
 import { MenuModel } from "../menu.model";
 import MenuBit from "../fce/menu.bit";
@@ -35,27 +36,27 @@ export const glopsMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
       if (global.GLOPS == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled glops" });
       if (global.GLOPS == null) global.GLOPS = GLOPS = require(path.resolve('./dist/020.glops/hunt'));
 
-      if (global.TIME == null) await new Promise<void>((resolve, reject) => exec('tsc -b 001.time', err => err ? reject(err) : resolve()));
+      //if (global.TIME == null) await new Promise<void>((resolve, reject) => exec('tsc -b 001.time', err => err ? reject(err) : resolve()));
 
-      if (global.TIME == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled time" });
-      if (global.TIME == null) TIME = global.TIME = require(path.resolve('./dist/001.time/hunt'));
-      if (window[PVT.TIME] == null) window[PVT.TIME] = TIME.hunt
+      //if (global.TIME == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled time" });
+      //if (global.TIME == null) TIME = global.TIME = require(path.resolve('./dist/001.time/hunt'));
+      //if (window[PVT.TIME] == null) window[PVT.TIME] = TIME.hunt
 
-      if (global.SPACE == null) await new Promise<void>((resolve, reject) => exec('tsc -b 002.space', err => err ? reject(err) : resolve()));
+      //if (global.SPACE == null) await new Promise<void>((resolve, reject) => exec('tsc -b 002.space', err => err ? reject(err) : resolve()));
 
-      if (global.SPACE == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled space" });
-      if (global.SPACE == null) SPACE = global.SPACE = require(path.resolve('./dist/002.space/hunt'));
-      if (window[PVT.SPACE] == null) window[PVT.SPACE] = SPACE.hunt
+      //if (global.SPACE == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled space" });
+      //if (global.SPACE == null) SPACE = global.SPACE = require(path.resolve('./dist/002.space/hunt'));
+      //if (window[PVT.SPACE] == null) window[PVT.SPACE] = SPACE.hunt
 
 
-      if (global.SOWER == null) await new Promise<void>((resolve, reject) => exec('tsc -b 010.sower', err => err ? reject(err) : resolve()));
+      //if (global.SOWER == null) await new Promise<void>((resolve, reject) => exec('tsc -b 010.sower', err => err ? reject(err) : resolve()));
 
-      if (global.SOWER == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled sower" });
-      if (global.SOWER == null) SOWER = global.SOWER = require(path.resolve('./dist/010.sower/hunt'));
-      if (window[PVT.SOWER] == null) window[PVT.SOWER] = SOWER.hunt
+      //if (global.SOWER == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled sower" });
+      //if (global.SOWER == null) SOWER = global.SOWER = require(path.resolve('./dist/010.sower/hunt'));
+      //if (window[PVT.SOWER] == null) window[PVT.SOWER] = SOWER.hunt
 
-      lst = FS.readJsonSync('./public/data/color/000.color.name.json')
-      bit = await GLOPS.hunt(ActClr.OPEN_COLOR, { lst })
+      //lst = FS.readJsonSync('./public/data/color/000.color.name.json')
+      //bit = await GLOPS.hunt(ActClr.OPEN_COLOR, { lst })
 
     } catch (err) {
       console.error(`exec error: ${err}`);
@@ -63,7 +64,9 @@ export const glopsMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
     }
   })();
 
-  lst = [ ActGlp.UPDATE_GLOPS, ActGlp.ACCESS_GLOPS, ActGlp.OPEN_GLOPS, ActMnu.UPDATE_MENU]
+
+
+  lst = [ActGlp.UPDATE_GLOPS, ActGlp.ACCESS_GLOPS, ActGlp.OPEN_GLOPS, ActRwk.TEST_RATCHETWRK, ActGlp.TEST_GLOPS, ActMnu.UPDATE_MENU]
 
   bit = await ste.hunt(ActGrd.UPDATE_GRID, { x: 0, y: 4, xSpan: 4, ySpan: 12 })
   bit = await ste.hunt(ActChc.OPEN_CHOICE, { dat: { clr0: Color.BLACK, clr1: Color.YELLOW }, src: Align.VERTICAL, lst, net: bit.grdBit.dat })
@@ -82,6 +85,16 @@ export const glopsMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
 
     case ActGlp.OPEN_GLOPS:
       bit = await GLOPS.hunt(ActGlp.OPEN_GLOPS, {})
+      bit = await ste.hunt(ActMnu.PRINT_MENU, bit)
+      break;
+
+    case ActGlp.TEST_GLOPS:
+      bit = await GLOPS.hunt(ActGlp.TEST_GLOPS, {})
+      bit = await ste.hunt(ActMnu.PRINT_MENU, bit)
+      break;
+
+    case ActRwk.TEST_RATCHETWRK:
+      bit = await GLOPS.hunt(ActRwk.TEST_RATCHETWRK, {})
       bit = await ste.hunt(ActMnu.PRINT_MENU, bit)
       break;
 

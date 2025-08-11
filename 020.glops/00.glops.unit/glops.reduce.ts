@@ -25,6 +25,9 @@ case Act.OUTPUT_GLOPS:
 case Act.ACCESS_GLOPS:
  return Buzz.accessGlops(clone(model), act.bale, state);
 
+case Act.TEST_GLOPS:
+ return Buzz.testGlops(clone(model), act.bale, state);
+ 
  default:
  return model;
  }

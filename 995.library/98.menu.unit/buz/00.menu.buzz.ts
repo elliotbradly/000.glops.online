@@ -62,10 +62,10 @@ export const updateMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
 
   lst = [
     ActLib.DEV_LIBRARY,
+    ActMnu.GLOPS_MENU,
     ActDif.UPDATE_DIFFUSION,
     ActSrv.UPDATE_SERVER,
     ActMnu.EARTH_MENU,
-    ActMnu.GLOPS_MENU,
     ActDat.FRAME_DATA,
     ActMnu.OLLAMA_MENU,
     ActMnu.CONTROL_MENU,
@@ -81,6 +81,11 @@ export const updateMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
   src = bit.chcBit.src;
 
   switch (src) {
+
+    case ActMnu.GLOPS_MENU:
+      
+      bit = await ste.hunt(ActMnu.GLOPS_MENU, {})
+      break;
 
 
     case ActSrv.UPDATE_SERVER:
@@ -241,9 +246,7 @@ export const updateMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
       bit = await ste.hunt(ActMnu.EARTH_MENU, {})
       break;
 
-    case ActMnu.GLOPS_MENU:
-      bit = await ste.hunt(ActMnu.GLOPS_MENU, {})
-      break;
+
 
     case ActLib.UPDATE_LIBRARY:
       ste.hunt(ActCns.UPDATE_CONSOLE, { idx: 'cns00', src: "Update Library Pivot" })

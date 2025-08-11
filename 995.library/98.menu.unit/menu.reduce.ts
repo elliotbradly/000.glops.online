@@ -51,6 +51,9 @@ export function reducer(model: MenuModel = new MenuModel(), act: Act.Actions, st
     case Act.BEING_MENU:
       return Buzz.beingMenu(clone(model), act.bale, state);
 
+    case Act.GLOPS_MENU:
+      return Buzz.glopsMenu(clone(model), act.bale, state);
+
     default:
       return model;
   }

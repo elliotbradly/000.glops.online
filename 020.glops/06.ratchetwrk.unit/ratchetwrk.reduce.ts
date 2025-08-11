@@ -28,6 +28,9 @@ case Act.DELETE_RATCHETWRK:
 case Act.CREATE_RATCHETWRK:
  return Buzz.createRatchetwrk(clone(model), act.bale, state);
 
+case Act.TEST_RATCHETWRK:
+ return Buzz.testRatchetwrk(clone(model), act.bale, state);
+ 
  default:
  return model;
  }

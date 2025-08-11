@@ -4,13 +4,10 @@ import State from "../../99.core/state";
 import OrbBit from "../fce/orb.bit";
 
 //import * as ActClr from "../../../000.earth/03.color.unit/color.action";
-import * as ActSpk from "../../03.ratchetwrk.unit/ratchetwrk.action";
+import * as ActRwk from "../../06.ratchetwrk.unit/ratchetwrk.action";
 import * as ActCol from "../../97.collect.unit/collect.action";
 import * as ActBus from "../../99.bus.unit/bus.action";
 
-import * as ActVrt from "../../act/vurt.action"
-import * as ActDsk from "../../act/disk.action"
-import * as ActPvt from "../../act/pivot.action"
 
 import EtherealBit from "../fce/talent/etheric.bit";
 

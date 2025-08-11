@@ -2,7 +2,7 @@ import * as clone from "clone-deep";
 import * as Act from "./fluxGlop.action";
 import { FluxGlopModel } from "./fluxGlop.model";
 import * as Buzz from "./fluxGlop.buzzer";
-import State from "../../../995.library/99.core/state";
+import State from "../99.core/state";
 
 export function reducer(model: FluxGlopModel = new FluxGlopModel(), act: Act.Actions,  state?: State ) {
  switch (act.type) {

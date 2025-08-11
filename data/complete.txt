@@ -17768,7 +17768,9 @@ import * as Increment from '../../val/increment'
 var bit
 
 
+
 export const accessGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
 
 
   cpy.access = bal.val
@@ -17813,7 +17815,11 @@ import * as Increment from '../../val/increment'
 var bit
 
 
+
+
+
 export const advanceGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
 
 
     cpy.dex += 1;
@@ -17829,17 +17835,23 @@ export const advanceGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) =
     return cpy;
 };
 
-
 import { GlopsModel } from "../glops.model";
-import glopsBit from "../fce/glops.bit";
+import GlopsBit from "../fce/glops.bit";
 import State from "../../99.core/state";
 
-export const initglops = (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+export const initGlops = (cpy: GlopsModel, bal: GlopsBit, ste: State) => {
 
     bal.slv({ intBit: { idx: "init-glops", dat: { src: 'genesis' } } });
-
     return cpy;
 };
+
+
+
+export const testGlops = (cpy: GlopsModel, bal: GlopsBit, ste: State) => {
+    bal.slv({ glpBit: { idx: "test-glops", dat: { src: 'genesis' } } });
+    return cpy;
+};
+
 
 import { GlopsModel } from "../glops.model";
 import glopsBit from "../fce/glops.bit";
@@ -17862,7 +17874,9 @@ import * as Increment from '../../val/increment'
 var bit
 
 
+
 export const openGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
 
 
     if (cpy.opened == 1) {
@@ -17935,7 +17949,10 @@ import * as Increment from '../../val/increment'
 var bit
 
 
+
+
 export const outputGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
+
 
 
     var output = { dex: 0, now: null, map:null, focus:null, colorListSize: 0 };
@@ -17975,6 +17992,7 @@ import * as PVT from '../../val/pivot'
 import * as Increment from '../../val/increment'
 
 var bit, dat
+
 
 
 export const updateGlops = async (cpy: GlopsModel, bal: glopsBit, ste: State) => {
@@ -18068,59 +18086,64 @@ export default interface Glops {
 }
 
 import { Action } from "../99.core/interface/action.interface";
-import  glopsBit  from "./fce/glops.bit";
+import  GlopsBit  from "./fce/glops.bit";
 
 // glops actions
 
 export const INIT_GLOPS = "[glops action] Init glops";
 export class InitGlops implements Action {
  readonly type = INIT_GLOPS;
- constructor(public bale: glopsBit) {}
+ constructor(public bale: GlopsBit) {}
 }
 
 export const OPEN_GLOPS = "[glops action] Open glops";
 export class OpenGlops implements Action {
  readonly type = OPEN_GLOPS;
- constructor(public bale: glopsBit) {}
+ constructor(public bale: GlopsBit) {}
 }
 
 export const UPDATE_GLOPS = "[glops action] Update glops";
 export class UpdateGlops implements Action {
  readonly type = UPDATE_GLOPS;
- constructor(public bale: glopsBit) {}
+ constructor(public bale: GlopsBit) {}
 }
 
 export const ADVANCE_GLOPS = "[Advance action] Advance glops";
  export class AdvanceGlops implements Action {
  readonly type = ADVANCE_GLOPS;
- constructor(public bale: glopsBit) {}
+ constructor(public bale: GlopsBit) {}
  }
 
 export const OUTPUT_GLOPS = "[Output action] Output glops";
  export class OutputGlops implements Action {
  readonly type = OUTPUT_GLOPS;
- constructor(public bale: glopsBit) {}
+ constructor(public bale: GlopsBit) {}
  }
 
 export const ACCESS_GLOPS = "[Access action] Access glops";
  export class AccessGlops implements Action {
  readonly type = ACCESS_GLOPS;
- constructor(public bale: glopsBit) {}
+ constructor(public bale: GlopsBit) {}
  }
 
+export const TEST_GLOPS = "[Test action] Test Glops";
+ export class TestGlops implements Action {
+ readonly type = TEST_GLOPS;
+ constructor(public bale: GlopsBit) {}
+ }
+ 
 export type Actions = | InitGlops | UpdateGlops | OpenGlops
 | AdvanceGlops
 | OutputGlops
 | AccessGlops
-export { initglops  } from "./buz/glops.buzz";
-
+| TestGlops
+export { initGlops  } from "./buz/glops.buzz";
 export { advanceGlops  } from "./buz/advanceGlops.buzz";
 export { updateGlops  } from "./buz/updateGlops.buzz";
 export { openGlops  } from "./buz/openGlops.buzz";
 export { outputGlops  } from "./buz/outputGlops.buzz";
 export { accessGlops  } from "./buz/accessGlops.buzz";
-
-
+export { testGlops  } from "./buz/glops.buzz";
 import Glops from "./fce/glops.interface";
 import glopsBit from "./fce/glops.interface";
 
@@ -18183,6 +18206,9 @@ case Act.OUTPUT_GLOPS:
 case Act.ACCESS_GLOPS:
  return Buzz.accessGlops(clone(model), act.bale, state);
 
+case Act.TEST_GLOPS:
+ return Buzz.testGlops(clone(model), act.bale, state);
+ 
  default:
  return model;
  }
@@ -18246,187 +18272,196 @@ var init = () => {
 
 
 
+
 export const glops = async (typ, obj) => {
 
   return sim.hunt(typ, obj)
 }
-import { WorldModel } from "../world.model";
-import WorldBit from "../fce/world.bit";
-import State from "../../99.core/state";
-import OrbBit from "../fce/orb.bit";
-
-
-import * as ActClr from "../../03.color.unit/color.action";
-
-import * as ActWld from "../../01.world.unit/world.action";
+import * as ActFgp from "../formGlop.action";
 import * as ActCol from "../../97.collect.unit/collect.action";
 import * as ActBus from "../../99.bus.unit/bus.action";
 
+import { FormGlopModel } from "../formGlop.model";
+import FormGlopBit from "../fce/formGlop.bit";
 
-import EtherealBit from "../fce/talent/etheric.bit";
-
-var bit, val, idx, dex, lst, dat, src;
-
-export const createWorld = async (cpy: WorldModel, bal: WorldBit, ste: State) => {
-
-    var dat: OrbBit = { idx: bal.idx, src: bal.src }
-
-    //var etri:EtherealBit = { bliyte:null, grusit:null, flxuow:null, kldadu:null };
-    //dat.bit = etri;
-
-    //bit = await ste.hunt( ActClr.BASKET_COLOR, {})
-    //dat.bit.bliyte = bit.clrBit.dat
-
-    //bit = await ste.hunt( ActClr.BASKET_COLOR, {})
-    //dat.bit.flxuow = bit.clrBit.dat
-
-    //bit = await ste.hunt( ActClr.BASKET_COLOR, {})
-    //dat.bit.grusit = bit.clrBit.dat
-
-    //bit = await ste.hunt( ActClr.BASKET_COLOR, {})
-    //dat.bit.kldadu = bit.clrBit.dat
-
-    //dat
-
-    bal.slv({ wldBit: { idx: "create-world", dat } });
-
-    return cpy;
-};
-
-import { WorldModel } from "../world.model";
-import WorldBit from "../fce/world.bit";
 import State from "../../99.core/state";
-import OrbBit from "../fce/orb.bit";
-
-
-import * as ActWld from "../../01.world.unit/world.action";
-import * as ActCol from "../../97.collect.unit/collect.action";
-import * as ActBus from "../../99.bus.unit/bus.action";
-
-
-
 
 var bit, val, idx, dex, lst, dat, src;
 
-export const initWorld = async (cpy: WorldModel, bal: WorldBit, ste: State) => {
+export const initFormGlop = async (cpy: FormGlopModel, bal: FormGlopBit, ste: State) => {
 
-    //set up colors
-    //src = '000.color.name.json'
-    //bit = await ste.bus(ActDsk.READ_DISK, { src: './data/color-list/' + src })
-    //var colorList = bit.dskBit.dat;
-
-    //lst = JSON.parse(colorList)
-
-    //bit = await ste.bus(ActClr.WRITE_COLOR, { idx: 'clr00', dat: { lst } });
-
-    //var staveDataLoc = './data/stave/'
-    //src = staveDataLoc + '002.genisi.txt';
-
-    //bit = await ste.bus(ActStv.WRITE_STAVE, { src });
-
-    bal.slv({ intBit: { idx: "init-world" } });
+    bal.slv({ intBit: { idx: "init-formGlop" } });
 
     return cpy;
 };
 
 
-export const updateWorld = async (cpy: WorldModel, bal: WorldBit, ste: State) => {
+export const updateFormGlop = async (cpy: FormGlopModel, bal: FormGlopBit, ste: State) => {
+
+    // --- Get all parameters from bal object, with defaults ---
+    const baseModuleYield = bal.baseModuleYield || 0;
+    const cycleTime = bal.cycleTime || 1; // Keep cycleTime logic simple for now
+
+    // Skills
+    const miningLvl = bal.miningLvl || 0;
+    const astrogeologyLvl = bal.astrogeologyLvl || 0;
+    const miningDroneOperationLvl = bal.miningDroneOperationLvl || 0;
+    const droneInterfacingLvl = bal.droneInterfacingLvl || 0;
+
+    // Ship
+    const shipHull = bal.shipHull || "";
+    const isOrcaIndustrialCoreActive = bal.isOrcaIndustrialCoreActive || false;
+    const isRorqualIndustrialCoreActive = bal.isRorqualIndustrialCoreActive || false;
+
+    // Modules & Rigs
+    const miningLaserUpgrade = bal.miningLaserUpgrade || "";
+    const miningCrystalType = bal.miningCrystalType || "";
+    const rigs = bal.rigs || { coreHarvester: "", droneMiningAugmentor: "" };
+    const droneType = bal.droneType || "";
+
+    // Fleet & Implants/Boosters
+    const hasMiningForemanBurst = bal.hasMiningForemanBurst || false;
+    const implants = bal.implants || { michisExcavationAugmentor: false, highwallImplantSet: false };
+    const boosters = bal.boosters || 0;
+
+    // --- Calculate Yield Modifier ---
+    let yieldModifier = 1.0;
+
+    // 1. Character Skills
+    let skillBonus = 1.0;
+    if (droneType) { // Drone yield calculation
+        skillBonus *= (1 + miningDroneOperationLvl * 0.05);
+        skillBonus *= (1 + droneInterfacingLvl * 0.10);
+    } else { // Laser/Strip miner yield calculation
+        skillBonus *= (1 + miningLvl * 0.05);
+        skillBonus *= (1 + astrogeologyLvl * 0.05);
+    }
+    yieldModifier *= skillBonus;
+
+    // 2. Ship Hulls
+    let shipBonus = 1.0;
+    switch (shipHull) {
+        // Laser/Strip bonuses
+        case "Venture": shipBonus *= 2.0; break; // +100%
+        case "Covetor": shipBonus *= 2.0; break; // +100%
+        case "Hulk": shipBonus *= 2.5; break; // +150%
+        // Drone bonuses
+        case "Procurer": if (droneType) shipBonus *= 1.5; break; // +50%
+        case "Skiff": if (droneType) shipBonus *= 2.0; break; // +100%
+        case "Porpoise": if (droneType) shipBonus *= 1.5; break; // +50%
+        case "Orca":
+            if (droneType) {
+                shipBonus *= isOrcaIndustrialCoreActive ? 3.5 : 2.5; // +250% or +150%
+            }
+            break;
+        case "Rorqual":
+            if (droneType) {
+                // Assuming +200% bonus for industrial core on top of base +300%
+                shipBonus *= isRorqualIndustrialCoreActive ? 6.0 : 4.0; // +500% or +300%
+            }
+            break;
+    }
+    yieldModifier *= shipBonus;
+
+    // 3. Ship Modules (Lasers/Strips only)
+    if (!droneType) {
+        if (miningLaserUpgrade === "I") yieldModifier *= 1.055;
+        if (miningLaserUpgrade === "II") yieldModifier *= 1.11;
+    }
+
+    // 4. Mining Crystals (Lasers/Strips only)
+    if (!droneType) {
+        if (miningCrystalType === "Tech I") yieldModifier *= 1.60;
+        if (miningCrystalType === "Tech II") yieldModifier *= 1.75;
+    }
+
+    // 5. Rigs
+    // Assuming 10% for Tech I and 15% for Tech II, as no values were provided.
+    let rigBonus = 1.0;
+    if (droneType && rigs.droneMiningAugmentor) {
+        if (rigs.droneMiningAugmentor === "I") rigBonus *= 1.10;
+        if (rigs.droneMiningAugmentor === "II") rigBonus *= 1.15;
+    }
+    if (!droneType && rigs.coreHarvester) {
+        if (rigs.coreHarvester === "I") rigBonus *= 1.10;
+        if (rigs.coreHarvester === "II") rigBonus *= 1.15;
+    }
+    yieldModifier *= rigBonus;
+
+    // 6. Drones - base yield is handled by baseModuleYield
+
+    // 7. Fleet Support (Command Bursts)
+    // Assuming a generic 10% bonus as no formula was provided.
+    if (hasMiningForemanBurst) {
+        yieldModifier *= 1.10;
+    }
+
+    // 8. Implants & Boosters
+    let implantBonus = 1.0;
+    if (implants.michisExcavationAugmentor) implantBonus *= 1.05;
+    // Assuming max bonus for Highwall set
+    if (implants.highwallImplantSet) implantBonus *= 1.10;
+    yieldModifier *= implantBonus;
+
+    yieldModifier *= (1 + boosters / 100);
+
+
+    // --- Final Calculation ---
+    const finalYieldPerCycle = baseModuleYield * yieldModifier;
+    const yieldPerSecond = finalYieldPerCycle / cycleTime;
+
+    bal.dat = {
+        yield: yieldPerSecond,
+        yieldPerCycle: finalYieldPerCycle,
+        cycleTime: cycleTime
+    };
+
+    if (bal.slv != null) bal.slv({ fgpBit: { idx: "update-formGlop", dat: bal.dat } });
+
     return cpy;
 };
 
 
-export const readWorld = async (cpy: WorldModel, bal: WorldBit, ste: State) => {
+export const readFormGlop = async (cpy: FormGlopModel, bal: FormGlopBit, ste: State) => {
 
-    if (bal.idx == null) bal.idx = 'wld00';
-    bit = await ste.hunt(ActCol.READ_COLLECT, { idx: bal.idx, bit: ActWld.CREATE_WORLD })
+    if (bal.idx == null) bal.idx = 'fgp00';
+    bit = await ste.hunt(ActCol.READ_COLLECT, { idx: bal.idx, bit: ActFgp.CREATE_FORMGLOP })
 
-    bal.slv({ wldBit: { idx: "read-world", dat: bit.clcBit.dat } });
+    bal.slv({ fgpBit: { idx: "read-formGlop", dat: bit.clcBit.dat } });
     return cpy;
 };
 
-export const writeWorld = async (cpy: WorldModel, bal: WorldBit, ste: State) => {
+export const writeFormGlop = async (cpy: FormGlopModel, bal: FormGlopBit, ste: State) => {
 
-    bit = await ste.hunt(ActCol.WRITE_COLLECT, { idx: bal.idx, src: bal.src, dat: bal.dat, bit: ActWld.CREATE_WORLD })
+    bit = await ste.hunt(ActCol.WRITE_COLLECT, { idx: bal.idx, src: bal.src, dat: bal.dat, bit: ActFgp.CREATE_FORMGLOP })
 
-    if (bal.slv != null) bal.slv({ wldBit: { idx: "write-world", dat: bit.clcBit.dat } });
+    if (bal.slv != null) bal.slv({ fgpBit: { idx: "write-formGlop", dat: bit.clcBit.dat } });
     return cpy;
 };
 
 
 
-export const removeWorld = async (cpy: WorldModel, bal: WorldBit, ste: State) => {
+export const removeFormGlop = async (cpy: FormGlopModel, bal: FormGlopBit, ste: State) => {
     debugger
     return cpy;
 };
 
 
-export const deleteWorld = async (cpy: WorldModel, bal: WorldBit, ste: State) => {
+export const deleteFormGlop = async (cpy: FormGlopModel, bal: FormGlopBit, ste: State) => {
     debugger
     return cpy;
 };
 
-export default interface OrbBit {
-    idx: string;
-    src?: string;
-    val?: number;
-}
+export const createFormGlop = async (cpy: FormGlopModel, bal: FormGlopBit, ste: State) => {
+    debugger
+    return cpy;
+};
 
-export default interface AuthenticBit {
-    direction: string;
-    purpose: string;
-    cohesion: string;
-}
 
-export default interface CapacitiveBit {
-    cognition: string;
-    vocabulary: string;
-    reminiscence: string;
-}
 
-export default interface EthericBit {
-    bliyte: string;
-    grusit: string;
-    flxuow: string;
-    kldadu: string
-}
 
-export default interface ImaginativeBit {
-    style: string;
-    ingenuity: string;
-    vision: string;
-}
 
-export default interface LegitimateBit {
-    fidelity: string;
-    recognition: string;
-    sovereignty: string;
-}
-
-export default interface PivotalBit {
-    contribution: string;
-    gravity: string;
-    providence: string;
-}
-
-export default interface ReactiveBit {
-    discernment: string;
-    impulse: string;
-    sensation: string;
-}
-
-export default interface SignificantBit {
-    force: string;
-    charge: string;
-    scale: string;
-}
-
-export default interface VigorousBit {
-    pizazz: string;
-    oomph: string;
-    zing: string;
-}
-
-export default interface WorldBit {
+export default interface FormGlopBit {
     idx: string;
     src?: string;
     val?: number;
@@ -18434,117 +18469,140 @@ export default interface WorldBit {
     slv?: Function;
     bit?: any;
     lst?: any[];
+    baseModuleYield?: number;
+    miningLvl?: number;
+    astrogeologyLvl?: number;
+    shipBonus?: number;
+    crystalBonus?: number;
+    fleetBoostBonus?: number;
+    implantBonus?: number;
+    cycleTime?: number;
+    // New Properties for yield calculation
+    miningDroneOperationLvl?: number;
+    droneInterfacingLvl?: number;
+    shipHull?: string;
+    isOrcaIndustrialCoreActive?: boolean;
+    isRorqualIndustrialCoreActive?: boolean;
+    miningLaserUpgrade?: string; // "I" or "II"
+    miningCrystalType?: string; // "Tech I" or "Tech II"
+    rigs?: { coreHarvester: string, droneMiningAugmentor: string }; // "I" or "II"
+    droneType?: string; // "Mining Drone I", "Mining Drone II", "'Harvester'", "'Excavator'"
+    hasMiningForemanBurst?: boolean;
+    miningForemanCharge?: string; // "Mining Laser Field Enhancement I" or "Mining Laser Field Enhancement II"
+    implants?: { michisExcavationAugmentor: boolean, highwallImplantSet: boolean };
+    boosters?: number; // percentage bonus
 }
 
-import  WorldBit  from "./world.bit";
+import  FormGlopBit  from "./formGlop.bit";
 
-export default interface World {
+export default interface FormGlop {
  // idx:string;
- // worldBitList: WorldBit[];
- // worldBits:any;
+ // formGlopBitList: FormGlopBit[];
+ // formGlopBits:any;
 
 }
 
 import { Action } from "../99.core/interface/action.interface";
-import  WorldBit  from "./fce/world.bit";
+import  FormGlopBit  from "./fce/formGlop.bit";
 
-// World actions
+// FormGlop actions
 
-export const INIT_WORLD = "[World action] Init World";
-export class InitWorld implements Action {
- readonly type = INIT_WORLD;
- constructor(public bale: WorldBit) {}
+export const INIT_FORMGLOP = "[FormGlop action] Init FormGlop";
+export class InitFormGlop implements Action {
+ readonly type = INIT_FORMGLOP;
+ constructor(public bale: FormGlopBit) {}
 }
 
-export const UPDATE_WORLD = "[World action] Update World";
-export class UpdateWorld implements Action {
- readonly type = UPDATE_WORLD;
- constructor(public bale: WorldBit) {}
+export const UPDATE_FORMGLOP = "[FormGlop action] Update FormGlop";
+export class UpdateFormGlop implements Action {
+ readonly type = UPDATE_FORMGLOP;
+ constructor(public bale: FormGlopBit) {}
 }
 
-export const READ_WORLD = "[Read action] Read World";
- export class ReadWorld implements Action {
- readonly type = READ_WORLD;
- constructor(public bale: WorldBit) {}
+export const READ_FORMGLOP = "[Read action] Read FormGlop";
+ export class ReadFormGlop implements Action {
+ readonly type = READ_FORMGLOP;
+ constructor(public bale: FormGlopBit) {}
  }
 
-export const WRITE_WORLD = "[Write action] Write World";
- export class WriteWorld implements Action {
- readonly type = WRITE_WORLD;
- constructor(public bale: WorldBit) {}
+export const WRITE_FORMGLOP = "[Write action] Write FormGlop";
+ export class WriteFormGlop implements Action {
+ readonly type = WRITE_FORMGLOP;
+ constructor(public bale: FormGlopBit) {}
  }
 
-export const REMOVE_WORLD = "[Remove action] Remove World";
- export class RemoveWorld implements Action {
- readonly type = REMOVE_WORLD;
- constructor(public bale: WorldBit) {}
+export const REMOVE_FORMGLOP = "[Remove action] Remove FormGlop";
+ export class RemoveFormGlop implements Action {
+ readonly type = REMOVE_FORMGLOP;
+ constructor(public bale: FormGlopBit) {}
  }
 
-export const DELETE_WORLD = "[Delete action] Delete World";
- export class DeleteWorld implements Action {
- readonly type = DELETE_WORLD;
- constructor(public bale: WorldBit) {}
+export const DELETE_FORMGLOP = "[Delete action] Delete FormGlop";
+ export class DeleteFormGlop implements Action {
+ readonly type = DELETE_FORMGLOP;
+ constructor(public bale: FormGlopBit) {}
  }
 
-export const CREATE_WORLD = "[Create action] Create World";
- export class CreateWorld implements Action {
- readonly type = CREATE_WORLD;
- constructor(public bale: WorldBit) {}
+export const CREATE_FORMGLOP = "[Create action] Create FormGlop";
+ export class CreateFormGlop implements Action {
+ readonly type = CREATE_FORMGLOP;
+ constructor(public bale: FormGlopBit) {}
  }
 
-export type Actions = | InitWorld | UpdateWorld
-| ReadWorld
-| WriteWorld
-| RemoveWorld
-| DeleteWorld
-| CreateWorld
+export type Actions = | InitFormGlop | UpdateFormGlop
+| ReadFormGlop
+| WriteFormGlop
+| RemoveFormGlop
+| DeleteFormGlop
+| CreateFormGlop
 
-export { initWorld  } from "./buz/world.buzz";
-export { updateWorld  } from "./buz/world.buzz";
-export { readWorld  } from "./buz/world.buzz";
-export { writeWorld  } from "./buz/world.buzz";
-export { removeWorld  } from "./buz/world.buzz";
-export { deleteWorld  } from "./buz/world.buzz";
-export { createWorld  } from "./buz/createWorld.buzz";
+export { updateFormGlop  } from "./buz/formGlop.buzz";
+export {  writeFormGlop  } from "./buz/formGlop.buzz";
+export {  readFormGlop  } from "./buz/formGlop.buzz";
 
-import World from "./fce/world.interface";
-import WorldBit from "./fce/world.interface";
+export { initFormGlop  } from "./buz/formGlop.buzz";
+export {  removeFormGlop  } from "./buz/formGlop.buzz";
+export {  deleteFormGlop  } from "./buz/formGlop.buzz";
+export {  createFormGlop  } from "./buz/formGlop.buzz";
 
-export class WorldModel implements World {
+import FormGlop from "./fce/formGlop.interface";
+import FormGlopBit from "./fce/formGlop.interface";
+
+export class FormGlopModel implements FormGlop {
  //idx:string;
- //worldBitList: WorldBit[] = [];
- //worldBits: any = {};
+ //formGlopBitList: FormGlopBit[] = [];
+ //formGlopBits: any = {};
 }
 
 import * as clone from "clone-deep";
-import * as Act from "./world.action";
-import { WorldModel } from "./world.model";
-import * as Buzz from "./world.buzzer";
+import * as Act from "./formGlop.action";
+import { FormGlopModel } from "./formGlop.model";
+import * as Buzz from "./formGlop.buzzer";
 import State from "../99.core/state";
 
-export function reducer(model: WorldModel = new WorldModel(), act: Act.Actions,  state?: State ) {
+export function reducer(model: FormGlopModel = new FormGlopModel(), act: Act.Actions,  state?: State ) {
  switch (act.type) {
 
- case Act.UPDATE_WORLD:
- return Buzz.updateWorld(clone(model), act.bale, state);
+ case Act.UPDATE_FORMGLOP:
+ return Buzz.updateFormGlop(clone(model), act.bale, state);
 
- case Act.INIT_WORLD:
- return Buzz.initWorld(clone(model), act.bale, state);
+ case Act.INIT_FORMGLOP:
+ return Buzz.initFormGlop(clone(model), act.bale, state);
 
-case Act.READ_WORLD:
- return Buzz.readWorld(clone(model), act.bale, state);
+case Act.READ_FORMGLOP:
+ return Buzz.readFormGlop(clone(model), act.bale, state);
 
-case Act.WRITE_WORLD:
- return Buzz.writeWorld(clone(model), act.bale, state);
+case Act.WRITE_FORMGLOP:
+ return Buzz.writeFormGlop(clone(model), act.bale, state);
 
-case Act.REMOVE_WORLD:
- return Buzz.removeWorld(clone(model), act.bale, state);
+case Act.REMOVE_FORMGLOP:
+ return Buzz.removeFormGlop(clone(model), act.bale, state);
 
-case Act.DELETE_WORLD:
- return Buzz.deleteWorld(clone(model), act.bale, state);
+case Act.DELETE_FORMGLOP:
+ return Buzz.deleteFormGlop(clone(model), act.bale, state);
 
-case Act.CREATE_WORLD:
- return Buzz.createWorld(clone(model), act.bale, state);
+case Act.CREATE_FORMGLOP:
+ return Buzz.createFormGlop(clone(model), act.bale, state);
 
  default:
  return model;
@@ -18554,792 +18612,300 @@ case Act.CREATE_WORLD:
 import State from "../99.core/state";
 
 
-export default class WorldUnit {
+export default class FormGlopUnit {
 
  constructor(state: State) {
  }
 }
 
-import * as ActFte from '../fate.action'
-
-
-import { FateModel } from "../fate.model";
-import FateBit from "../fce/fate.bit";
-import State from "../../99.core/state";
-
-var bit
-
-export const initFate = (cpy: FateModel, bal: FateBit, ste: State) => {
-
-    bal.slv({ intBit: { idx: "init-fate", dat: {} } });
-    return cpy;
-};
-
-export const updateFate = (cpy: FateModel, bal: FateBit, ste: State) => {
-
-    var Chance = require("chance");
-    cpy.fate = new Chance(cpy.seed);
-    cpy.seed += 1;
-
-    bal.slv({ fteBit: { idx: "update-fate", dat: {} } });
-
-    return cpy;
-};
-
-
-export const integerFate = async (cpy: FateModel, bal: FateBit, ste: State) => {
-
-    if (cpy.fate == null) bit = await ste.hunt(ActFte.UPDATE_FATE, {})
-
-    if (bal == null) bal = { idx: '' }
-    if (bal.lst == null) bal.lst = [0, 9]
-
-    var val = cpy.fate.integer({ min: bal.lst[0], max: bal.lst[1] });
-
-    bal.slv({ fteBit: { idx: "integer-fate", val } });
-
-    return cpy;
-};
-
-export const appleFate = async (cpy: FateModel, bal: FateBit, ste: State) => {
-
-    if (cpy.fate == null) bit = await ste.hunt(ActFte.UPDATE_FATE, {})
-
-    var val = cpy.fate.apple_token();
-
-    bal.slv({ fteBit: { idx: "apple-fate", val } });
-
-    return cpy;
-};
-
-var data = {}
-
-export const sineFate = async (cpy: FateModel, bal: FateBit, ste: State) => {
-    bit = await ste.hunt(ActFte.INTEGER_FATE, {})
-    cpy.position += bit.fteBit.val + 1;
-    cpy.sine = cpy.amplitude * Math.sin(cpy.frequency * cpy.position) * .1;
-    cpy.sine = Number(cpy.sine.toFixed(3))
-
-    if ( data[ 'sine' + cpy.sine ] == null ) data[ 'sine' + cpy.sine ] = 1;
-    else {
-    //    debugger
-    }
-
-    var dex = 0
-    for ( var key in data ){
-        dex += 1;
-     }
-
-    bal.slv({ fteBit: { idx: "sine-fate", val: cpy.sine, dex } });
-    return cpy;
-};
-import * as ActFte from '../fate.action'
-
-import { FateModel } from "../fate.model";
-import FateBit from "../fce/fate.bit";
-import State from "../../99.core/state";
-
-var bit
-
-export const selectFate = async (cpy: FateModel, bal: FateBit, ste: State) => {
-
-    if (cpy.fate == null) bit = await ste.hunt(ActFte.UPDATE_FATE, {})
-
-    if (bal == null) bal = { idx: null, lst: null }
-
-    if (bal.lst == null) bal.lst = [1, 2]
-    var dat = cpy.fate.pickone(bal.lst)
-
-    bal.slv({ fteBit: { idx: "select-fate", dat } });
-
-    return cpy;
-};
-
-import * as ActFte from '../fate.action'
-
-import { FateModel } from "../fate.model";
-import FateBit from "../fce/fate.bit";
-import State from "../../99.core/state";
-
-var bit,lst
-
-export const shuffleFate = async (cpy: FateModel, bal: FateBit, ste: State) => {
-
-
-
-    if (cpy.fate == null) bit = await ste.hunt(ActFte.UPDATE_FATE, {})
-
-    if (bal == null) bal = { idx: null, lst: null }
-
-    if (bal.lst == null) bal.lst = [1, 2]
-    lst = cpy.fate.shuffle(bal.lst)
-
-    bal.slv({ fteBit: { idx: "shuffle-fate", lst } });
-
-    return cpy;
-};
-
-import { Action } from "../99.core/interface/action.interface";
-import  FateBit  from "./fce/fate.bit";
-
-// Fate actions
-
-export const INIT_FATE = "[Fate action] Init Fate";
-export class InitFate implements Action {
- readonly type = INIT_FATE;
- constructor(public bale: FateBit) {}
-}
-
-export const UPDATE_FATE = "[Fate action] Update Fate";
-export class UpdateFate implements Action {
- readonly type = UPDATE_FATE;
- constructor(public bale: FateBit) {}
-}
-
-export const INTEGER_FATE = "[Fate action] Integer Fate";
- export class IntegerFate implements Action {
- readonly type = INTEGER_FATE;
- constructor(public bale: FateBit) {}
- }
-
-export const APPLE_FATE = "[Fate action] Apple Fate";
- export class AppleFate implements Action {
- readonly type = APPLE_FATE;
- constructor(public bale: FateBit) {}
- }
-
-export const SINE_FATE = "[Sine action] Sine Fate";
- export class SineFate implements Action {
- readonly type = SINE_FATE;
- constructor(public bale: FateBit) {}
- }
-
-export const SELECT_FATE = "[Select action] Select Fate";
- export class SelectFate implements Action {
- readonly type = SELECT_FATE;
- constructor(public bale: FateBit) {}
- }
-
-export const SHUFFLE_FATE = "[Shuffle action] Shuffle Fate";
- export class ShuffleFate implements Action {
- readonly type = SHUFFLE_FATE;
- constructor(public bale: FateBit) {}
- }
-
-export type Actions = | InitFate | UpdateFate
-| IntegerFate
-| AppleFate
-| SineFate
-| SelectFate
-| ShuffleFate
-export { initFate  } from "./buz/fate.buzz";
-export { updateFate  } from "./buz/fate.buzz";
-export { integerFate  } from "./buz/fate.buzz";
-export { appleFate  } from "./buz/fate.buzz";
-export { sineFate  } from "./buz/fate.buzz";
-export { selectFate  } from "./buz/selectFate.buzz";
-export { shuffleFate  } from "./buz/shuffleFate.buzz";
-import Fate from "./fce/fate.interface";
-import FateBit from "./fce/fate.interface";
-
-export class FateModel implements Fate {
- //idx:string;
- //fateBitList: FateBit[] = [];
- //fateBits: any = {};
- fate:any;
- seed:number = 19250925;
-
- amplitude:number = 10;  // Wave height
- frequency:number = 0.1; // How many cycles
- phaseShift:number = 0;  // Horizontal offset
- position:number = 0;
- sine:number = 0;
-
-}
-
-import * as clone from "clone-deep";
-import * as Act from "./fate.action";
-import { FateModel } from "./fate.model";
-import * as Buzz from "./fate.buzzer";
-import State from "../99.core/state";
-
-export function reducer(model: FateModel = new FateModel(), act: Act.Actions,  state?: State ) {
- switch (act.type) {
-
- case Act.UPDATE_FATE:
- return Buzz.updateFate(clone(model), act.bale, state);
-
- case Act.INIT_FATE:
- return Buzz.initFate(clone(model), act.bale, state);
-
-case Act.INTEGER_FATE:
- return Buzz.integerFate(clone(model), act.bale, state);
-
-case Act.APPLE_FATE:
- return Buzz.appleFate(clone(model), act.bale, state);
-
-case Act.SINE_FATE:
- return Buzz.sineFate(clone(model), act.bale, state);
-
-case Act.SELECT_FATE:
- return Buzz.selectFate(clone(model), act.bale, state);
-
-case Act.SHUFFLE_FATE:
- return Buzz.shuffleFate(clone(model), act.bale, state);
-
- default:
- return model;
- }
-}
-
-import State from "../99.core/state";
-
-export default class FateUnit {
-
- constructor(state: State) {
- }
-}
-
-
-export default interface FateBit {
- idx: string;
- src?: string;
- val?: number;
- dat?: any;
- slv?: Function;
- lst?: [number, number]
-}
-
-
-import  FateBit  from "./fate.bit";
-
-export default interface Fate {
- // idx:string;
- // fateBitList: FateBit[];
- // fateBits:any;
-
-}
-
-
-
+import * as ActFgp from "../fluxGlop.action";
 import * as ActCol from "../../97.collect.unit/collect.action";
-import * as ActClr from "../color.action";
+import * as ActBus from "../../99.bus.unit/bus.action";
 
-import { ColorModel } from "../color.model";
-import ColorBit from "../fce/color.bit";
+import { FluxGlopModel } from "../fluxGlop.model";
+import FluxGlopBit from "../fce/fluxGlop.bit";
 
 import State from "../../99.core/state";
 
 var bit, val, idx, dex, lst, dat, src;
 
-export const initColor = (cpy: ColorModel, bal: ColorBit, ste: State) => {
-    bal.slv({ intBit: { idx: "init-color" } });
-    return cpy;
-};
+export const initFluxGlop = async (cpy: FluxGlopModel, bal: FluxGlopBit, ste: State) => {
 
-
-
-export const updateColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
-    // Logic for updating color properties would go here.
-    bal.slv({ clrBit: { idx: "update-color", dat: bal.dat } });
-    return cpy;
-};
-
-export const readColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
-    if (bal.idx == null) bal.idx = 'clr00';
-    bit = await ste.hunt(ActCol.READ_COLLECT, { idx: bal.idx, bit: ActClr.CREATE_COLOR });
-    if (bal.slv != null) bal.slv({ clrBit: { idx: "read-color", dat: bit.clcBit.dat } });
-    return cpy;
-};
-
-export const writeColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
-    bit = await ste.hunt(ActCol.WRITE_COLLECT, { idx: bal.idx, dat: bal.dat, bit: ActClr.CREATE_COLOR });
-    if (bal.slv != null) bal.slv({ clrBit: { idx: "write-color", dat: bit.clcBit.dat } });
-    return cpy;
-};
-
-export const removeColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
-    bit = await ste.hunt(ActCol.REMOVE_COLLECT, { idx: bal.idx, bit: ActClr.DELETE_COLOR });
-    if (bal.slv != null) bal.slv({ clrBit: { idx: "remove-color", dat: bit.clcBit.dat } });
-    return cpy;
-};
-
-export const deleteColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
-    // No complex resources to clean up for a simple data object.
-    if (bal.slv != null) bal.slv({ clrBit: { idx: "delete-color" } });
-    return cpy;
-};
-
-
-export const listColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
-
-    dat = null
-
-    bit = await ste.hunt(ActCol.LIST_COLLECT, { val: 0, bit: ActClr.CREATE_COLOR })
-    lst = bit.clcBit.lst
-
-    bal.slv({ clrBit: { idx: 'list-color', val: lst.length, lst } });
-
-    return cpy;
-};
-import { ColorModel } from "../color.model";
-import ColorBit from "../fce/color.bit";
-import State from "../../99.core/state";
-
-import ClrBit from "../fce/clr.bit";
-
-import * as ActClr from '../color.action'
-import * as ActFte from '../../../000.glops/02.fate.unit/fate.action'
-
-var bit, lst, idx, src, dat, val;
-
-export const accessColor = (cpy: ColorModel, bal: ColorBit, ste: State) => {
-
-
-
-    dat = { val: cpy.basket.length }
-
-    bal.slv({ clrBit: { idx: "access-color", dat } });
+    bal.slv({ intBit: { idx: "init-fluxGlop" } });
 
     return cpy;
 };
 
-import { ColorModel } from "../color.model";
-import ColorBit from "../fce/color.bit";
-import State from "../../99.core/state";
-import * as clone from "clone-deep";
 
-import * as ActClr from '../color.action'
-import * as ActFte from '../../../000.glops/02.fate.unit/fate.action'
+export const updateFluxGlop = async (cpy: FluxGlopModel, bal: FluxGlopBit, ste: State) => {
 
-var bit, lst, idx, src, dat, val;
+    const baseModuleYield = bal.baseModuleYield || 0;
+    const miningLvl = bal.miningLvl || 0;
+    const astrogeologyLvl = bal.astrogeologyLvl || 0;
+    const shipBonus = bal.shipBonus || 0;
+    const crystalBonus = bal.crystalBonus || 0;
+    const fleetBoostBonus = bal.fleetBoostBonus || 0;
+    const implantBonus = bal.implantBonus || 0;
 
-export const basketColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
+    // Cycle Time Calculation
+    const baseCycleTime = bal.baseCycleTime || 180; // Default to a reasonable base cycle time
+    let cycleTimeModifier = 1.0;
 
-
-
-    var nowColor;
-
-    if (cpy.basket.length == 0) {
-        lst = clone(cpy.nameList)
-        var fteBit = await ste.hunt(ActFte.SHUFFLE_FATE, { lst })
-        cpy.basket = fteBit.fteBit.lst
+    // Ship Hulls
+    if (bal.shipHull === "Retriever") {
+        cycleTimeModifier *= 0.5;
+    } else if (bal.shipHull === "Mackinaw") {
+        cycleTimeModifier *= 0.25;
+    } else if (bal.shipHull === "Hulk" && bal.exhumersLvl) {
+        cycleTimeModifier *= (1 - 0.02 * bal.exhumersLvl);
     }
 
-    if (cpy.basket.length == 1) {
-        nowColor = basketColor[0]
-
-        //BASKET RESET!!!
-
-    } else {
-
-        var fteBit = await ste.hunt(ActFte.SELECT_FATE, { lst: cpy.basket })
-
-        nowColor = fteBit.fteBit.dat
-
-        var index = 0;
-
-        cpy.basket.forEach( (a,b)=>{
-            if ( a !=  nowColor ) return
-            index = b
-        })
-
-        cpy.basket.splice(index, 1);
-
+    // Fleet Support (Command Bursts) - Simplified
+    // The exact formula is complex and depends on many factors not available here.
+    // This is a simplified placeholder.
+    if (bal.hasMiningForemanBurst) {
+        // Assuming a generic 10% bonus for having a foreman burst.
+        // A real implementation would need more details on skills and charges.
+        cycleTimeModifier *= 0.90;
     }
 
-    bal.slv({ clrBit: { idx: 'basket-color', dat: nowColor, val:cpy.basket.length } });
-
-    return cpy;
-};
-import { ColorModel } from "../color.model";
-import ColorBit from "../fce/color.bit";
-import State from "../../99.core/state";
-
-import ClrBit from "../fce/clr.bit";
-
-import * as ActClr from '../color.action'
-import * as ActFte from '../../../000.glops/02.fate.unit/fate.action'
-
-var bit, lst, idx, src, dat, val;
-
-export const createColor = (cpy: ColorModel, bal: ColorBit, ste: State) => {
-    var dat: ClrBit = { idx: bal.idx, hex: '#FFFFFF' }; // Default color is white
-
-    if (bal.dat != null) {
-        for (var key in bal.dat) {
-            dat[key] = bal.dat[key];
-        }
+    // Thermodynamics (Overheating)
+    if (bal.isOverheating) {
+        cycleTimeModifier *= 0.85; // Approximately 15% reduction
     }
 
-    if (cpy.names[bal.idx] == null) {
-        cpy.nameList.push(bal.idx)
-        cpy.names[bal.idx] = 1
+    // Character Skills (Ice Harvesting Only)
+    // Note: The logic for checking if we are mining ice is not present.
+    // This bonus is applied generally for now.
+    if (bal.iceHarvestingLvl) {
+        cycleTimeModifier *= (1 - 0.05 * bal.iceHarvestingLvl);
     }
 
-    bal.slv({ clrBit: { idx: "create-color", dat: dat } });
-    return cpy;
-};
-
-
-import { ColorModel } from "../color.model";
-import ColorBit from "../fce/color.bit";
-import State from "../../99.core/state";
-
-import * as ActClr from '../color.action'
-
-var lst, idx, src, dat, val;
-
-export const openColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
-
-
-
-    lst = bal.lst
-
-    var dex = 0;
-
-    var action = async () => {
-
-
-
-        dex
-        var itm = lst[dex];
-        if (itm == null) {
-            bal.slv({ clrBit: { idx: "open-color-error", src: 'no item present' } });
-        }
-
-        var name = itm.name;
-
-        var S = require('string')
-        idx = S(name).slugify().s
-        src = itm.value
-        dat = itm.rgb
-        val = itm.value
-
-        await ste.hunt(ActClr.WRITE_COLOR, { idx, src, val, dat })
-
-        dex += 1;
-
-        if (dex >= lst.length) {
-
-            bal.slv({ clrBit: { idx: "open-color", val: lst.length } });
-            return
-        }
-
-        await action()
-
+    // Mining Crystals
+    if (bal.miningCrystalType === "Tech I") {
+        cycleTimeModifier *= 1.25;
+    } else if (bal.miningCrystalType === "Tech II") {
+        cycleTimeModifier *= 1.50;
     }
 
-    await action()
+    const cycleTime = baseCycleTime * cycleTimeModifier;
+
+    const skillBonus = (1 + miningLvl * 0.05) * (1 + astrogeologyLvl * 0.05);
+
+    const finalYieldPerCycle =
+        baseModuleYield *
+        skillBonus *
+        (1 + shipBonus) *
+        (1 + crystalBonus) *
+        (1 + fleetBoostBonus) *
+        (1 + implantBonus);
+
+    const yieldPerSecond = finalYieldPerCycle / cycleTime;
+
+    bal.dat = {
+        yield: yieldPerSecond,
+        yieldPerCycle: finalYieldPerCycle,
+        cycleTime: cycleTime
+    };
+
+    if (bal.slv != null) bal.slv({ flpBit: { idx: "update-fluxGlop", dat: bal.dat } });
 
     return cpy;
 };
 
 
-import { ColorModel } from "../color.model";
-import ColorBit from "../fce/color.bit";
-import State from "../../99.core/state";
+export const readFluxGlop = async (cpy: FluxGlopModel, bal: FluxGlopBit, ste: State) => {
 
-import * as ActClr from '../color.action'
-import * as ActFte from '../../../000.glops/02.fate.unit/fate.action'
+    if (bal.idx == null) bal.idx = 'flp00';
+    bit = await ste.hunt(ActCol.READ_COLLECT, { idx: bal.idx, bit: ActFgp.CREATE_FLUXGLOP })
 
-var bit, lst, idx, src, dat, val;
-
-export const randomColor = async (cpy: ColorModel, bal: ColorBit, ste: State) => {
-
-    bit = await ste.hunt(ActClr.LIST_COLOR)
-
-    lst = bit.clrBit.lst
-
-    bit = await ste.hunt( ActFte.SELECT_FATE, {lst})
-    idx = bit.fteBit.dat
-
-    bit = await ste.hunt(ActClr.READ_COLOR, {idx})
-
-    dat = bit.clrBit.dat;
-
-    bal.slv({ clrBit: { idx: 'randome-color', dat } });
-
+    bal.slv({ flpBit: { idx: "read-fluxGlop", dat: bit.clcBit.dat } });
     return cpy;
 };
-import { Action } from "../99.core/interface/action.interface";
-import ColorBit from "./fce/color.bit";
-export declare const INIT_COLOR = "[Color action] Init Color";
-export declare class InitColor implements Action {
-    bale: ColorBit;
-    readonly type = "[Color action] Init Color";
-    constructor(bale: ColorBit);
+
+export const writeFluxGlop = async (cpy: FluxGlopModel, bal: FluxGlopBit, ste: State) => {
+
+    bit = await ste.hunt(ActCol.WRITE_COLLECT, { idx: bal.idx, src: bal.src, dat: bal.dat, bit: ActFgp.CREATE_FLUXGLOP })
+
+    if (bal.slv != null) bal.slv({ flpBit: { idx: "write-fluxGlop", dat: bit.clcBit.dat } });
+    return cpy;
+};
+
+
+
+export const removeFluxGlop = async (cpy: FluxGlopModel, bal: FluxGlopBit, ste: State) => {
+    debugger
+    return cpy;
+};
+
+
+export const deleteFluxGlop = async (cpy: FluxGlopModel, bal: FluxGlopBit, ste: State) => {
+    debugger
+    return cpy;
+};
+
+export const createFluxGlop = async (cpy: FluxGlopModel, bal: FluxGlopBit, ste: State) => {
+    debugger
+    return cpy;
+};
+
+export default interface FluxGlopBit {
+    idx: string;
+    src?: string;
+    val?: number;
+    dat?: any;
+    slv?: Function;
+    bit?: any;
+    lst?: any[];
+    baseModuleYield?: number;
+    miningLvl?: number;
+    astrogeologyLvl?: number;
+    shipBonus?: number;
+    crystalBonus?: number;
+    fleetBoostBonus?: number;
+    implantBonus?: number;
+    cycleTime?: number;
+    //New Properties for cycle time calculation
+    shipHull?: string;
+    exhumersLvl?: number;
+    hasMiningForemanBurst?: boolean;
+    miningForemanCharge?: string;
+    boosterSkills?: { miningForeman: number, miningDirector: number };
+    boosterShip?: string;
+    isRorqualIndustrialCoreActive?: boolean;
+    isOverheating?: boolean;
+    iceHarvestingLvl?: number;
+    miningCrystalType?: string;
+    baseCycleTime?: number;
 }
-export declare const UPDATE_COLOR = "[Color action] Update Color";
-export declare class UpdateColor implements Action {
-    bale: ColorBit;
-    readonly type = "[Color action] Update Color";
-    constructor(bale: ColorBit);
+
+import  FluxGlopBit  from "./fluxGlop.bit";
+
+export default interface FluxGlop {
+ // idx:string;
+ // fluxGlopBitList: FluxGlopBit[];
+ // fluxGlopBits:any;
+
 }
-export declare const OPEN_COLOR = "[Open action] Open Color";
-export declare class OpenColor implements Action {
-    bale: ColorBit;
-    readonly type = "[Open action] Open Color";
-    constructor(bale: ColorBit);
-}
-export declare const READ_COLOR = "[Read action] Read Color";
-export declare class ReadColor implements Action {
-    bale: ColorBit;
-    readonly type = "[Read action] Read Color";
-    constructor(bale: ColorBit);
-}
-export declare const WRITE_COLOR = "[Write action] Write Color";
-export declare class WriteColor implements Action {
-    bale: ColorBit;
-    readonly type = "[Write action] Write Color";
-    constructor(bale: ColorBit);
-}
-export declare const REMOVE_COLOR = "[Remove action] Remove Color";
-export declare class RemoveColor implements Action {
-    bale: ColorBit;
-    readonly type = "[Remove action] Remove Color";
-    constructor(bale: ColorBit);
-}
-export declare const DELETE_COLOR = "[Delete action] Delete Color";
-export declare class DeleteColor implements Action {
-    bale: ColorBit;
-    readonly type = "[Delete action] Delete Color";
-    constructor(bale: ColorBit);
-}
-export declare const CREATE_COLOR = "[Create action] Create Color";
-export declare class CreateColor implements Action {
-    bale: ColorBit;
-    readonly type = "[Create action] Create Color";
-    constructor(bale: ColorBit);
-}
-export declare const LIST_COLOR = "[List action] List Color";
-export declare class ListColor implements Action {
-    bale: ColorBit;
-    readonly type = "[List action] List Color";
-    constructor(bale: ColorBit);
-}
-export declare const RANDOM_COLOR = "[Random action] Random Color";
-export declare class RandomColor implements Action {
-    bale: ColorBit;
-    readonly type = "[Random action] Random Color";
-    constructor(bale: ColorBit);
-}
-export declare const BASKET_COLOR = "[Basket action] Basket Color";
-export declare class BasketColor implements Action {
-    bale: ColorBit;
-    readonly type = "[Basket action] Basket Color";
-    constructor(bale: ColorBit);
-}
-export declare const ACCESS_COLOR = "[Access action] Access Color";
-export declare class AccessColor implements Action {
-    bale: ColorBit;
-    readonly type = "[Access action] Access Color";
-    constructor(bale: ColorBit);
-}
-export type Actions = InitColor | UpdateColor | OpenColor | ReadColor | WriteColor | RemoveColor | DeleteColor | CreateColor | ListColor | RandomColor | BasketColor | AccessColor;
 
 import { Action } from "../99.core/interface/action.interface";
-import  ColorBit  from "./fce/color.bit";
+import  FluxGlopBit  from "./fce/fluxGlop.bit";
 
-// Color actions
+// FluxGlop actions
 
-export const INIT_COLOR = "[Color action] Init Color";
-export class InitColor implements Action {
- readonly type = INIT_COLOR;
- constructor(public bale: ColorBit) {}
+export const INIT_FLUXGLOP = "[FluxGlop action] Init FluxGlop";
+export class InitFluxGlop implements Action {
+ readonly type = INIT_FLUXGLOP;
+ constructor(public bale: FluxGlopBit) {}
 }
 
-export const UPDATE_COLOR = "[Color action] Update Color";
-export class UpdateColor implements Action {
- readonly type = UPDATE_COLOR;
- constructor(public bale: ColorBit) {}
+export const UPDATE_FLUXGLOP = "[FluxGlop action] Update FluxGlop";
+export class UpdateFluxGlop implements Action {
+ readonly type = UPDATE_FLUXGLOP;
+ constructor(public bale: FluxGlopBit) {}
 }
 
-export const OPEN_COLOR = "[Open action] Open Color";
- export class OpenColor implements Action {
- readonly type = OPEN_COLOR;
- constructor(public bale: ColorBit) {}
+export const READ_FLUXGLOP = "[Read action] Read FluxGlop";
+ export class ReadFluxGlop implements Action {
+ readonly type = READ_FLUXGLOP;
+ constructor(public bale: FluxGlopBit) {}
  }
 
-export const READ_COLOR = "[Read action] Read Color";
- export class ReadColor implements Action {
- readonly type = READ_COLOR;
- constructor(public bale: ColorBit) {}
+export const WRITE_FLUXGLOP = "[Write action] Write FluxGlop";
+ export class WriteFluxGlop implements Action {
+ readonly type = WRITE_FLUXGLOP;
+ constructor(public bale: FluxGlopBit) {}
  }
 
-export const WRITE_COLOR = "[Write action] Write Color";
- export class WriteColor implements Action {
- readonly type = WRITE_COLOR;
- constructor(public bale: ColorBit) {}
+export const REMOVE_FLUXGLOP = "[Remove action] Remove FluxGlop";
+ export class RemoveFluxGlop implements Action {
+ readonly type = REMOVE_FLUXGLOP;
+ constructor(public bale: FluxGlopBit) {}
  }
 
-export const REMOVE_COLOR = "[Remove action] Remove Color";
- export class RemoveColor implements Action {
- readonly type = REMOVE_COLOR;
- constructor(public bale: ColorBit) {}
+export const DELETE_FLUXGLOP = "[Delete action] Delete FluxGlop";
+ export class DeleteFluxGlop implements Action {
+ readonly type = DELETE_FLUXGLOP;
+ constructor(public bale: FluxGlopBit) {}
  }
 
-export const DELETE_COLOR = "[Delete action] Delete Color";
- export class DeleteColor implements Action {
- readonly type = DELETE_COLOR;
- constructor(public bale: ColorBit) {}
+export const CREATE_FLUXGLOP = "[Create action] Create FluxGlop";
+ export class CreateFluxGlop implements Action {
+ readonly type = CREATE_FLUXGLOP;
+ constructor(public bale: FluxGlopBit) {}
  }
 
-export const CREATE_COLOR = "[Create action] Create Color";
- export class CreateColor implements Action {
- readonly type = CREATE_COLOR;
- constructor(public bale: ColorBit) {}
- }
+export type Actions = | InitFluxGlop | UpdateFluxGlop
+| ReadFluxGlop
+| WriteFluxGlop
+| RemoveFluxGlop
+| DeleteFluxGlop
+| CreateFluxGlop
 
-export const LIST_COLOR = "[List action] List Color";
- export class ListColor implements Action {
- readonly type = LIST_COLOR;
- constructor(public bale: ColorBit) {}
- }
+export { updateFluxGlop  } from "./buz/fluxGlop.buzz";
+export {  writeFluxGlop  } from "./buz/fluxGlop.buzz";
+export {  readFluxGlop  } from "./buz/fluxGlop.buzz";
 
-export const RANDOM_COLOR = "[Random action] Random Color";
- export class RandomColor implements Action {
- readonly type = RANDOM_COLOR;
- constructor(public bale: ColorBit) {}
- }
+export { initFluxGlop  } from "./buz/fluxGlop.buzz";
+export {  removeFluxGlop  } from "./buz/fluxGlop.buzz";
+export {  deleteFluxGlop  } from "./buz/fluxGlop.buzz";
+export {  createFluxGlop  } from "./buz/fluxGlop.buzz";
 
-export const BASKET_COLOR = "[Basket action] Basket Color";
- export class BasketColor implements Action {
- readonly type = BASKET_COLOR;
- constructor(public bale: ColorBit) {}
- }
 
-export const ACCESS_COLOR = "[Access action] Access Color";
- export class AccessColor implements Action {
- readonly type = ACCESS_COLOR;
- constructor(public bale: ColorBit) {}
- }
 
-export type Actions = | InitColor | UpdateColor
-| OpenColor
-| ReadColor
-| WriteColor
-| RemoveColor
-| DeleteColor
-| CreateColor
-| ListColor
-| RandomColor
-| BasketColor
-| AccessColor
-export { initColor  } from "./buz/0.color.buzz";
-export { updateColor  } from "./buz/0.color.buzz";
-export { readColor } from "./buz/0.color.buzz";
-export { writeColor } from "./buz/0.color.buzz";
-export { removeColor } from "./buz/0.color.buzz";
-export { deleteColor } from "./buz/0.color.buzz";
-export { listColor  } from "./buz/0.color.buzz";
-export { randomColor  } from "./buz/randomColor.buzz";
-export { basketColor  } from "./buz/basketColor.buzz";
-export { openColor  } from "./buz/openColor.buzz";
-export { createColor } from "./buz/createColor.buzz";
-export { accessColor  } from "./buz/accessColor.buzz";
-import Color from "./fce/color.interface";
-import ColorBit from "./fce/color.interface";
 
-export class ColorModel implements Color {
-    //idx:string;
-    //colorBitList: ColorBit[] = [];
-    //colorBits: any = {};
-    nameList: any[] = []
-    names: any = {}
-    basket: any[] = []
+
+import FluxGlop from "./fce/fluxGlop.interface";
+import FluxGlopBit from "./fce/fluxGlop.interface";
+
+export class FluxGlopModel implements FluxGlop {
+ //idx:string;
+ //fluxGlopBitList: FluxGlopBit[] = [];
+ //fluxGlopBits: any = {};
 }
 
 import * as clone from "clone-deep";
-import * as Act from "./color.action";
-import { ColorModel } from "./color.model";
-import * as Buzz from "./color.buzzer";
+import * as Act from "./fluxGlop.action";
+import { FluxGlopModel } from "./fluxGlop.model";
+import * as Buzz from "./fluxGlop.buzzer";
 import State from "../99.core/state";
 
-export function reducer(model: ColorModel = new ColorModel(), act: Act.Actions,  state?: State ) {
+export function reducer(model: FluxGlopModel = new FluxGlopModel(), act: Act.Actions,  state?: State ) {
  switch (act.type) {
 
- case Act.UPDATE_COLOR:
- return Buzz.updateColor(clone(model), act.bale, state);
+ case Act.UPDATE_FLUXGLOP:
+ return Buzz.updateFluxGlop(clone(model), act.bale, state);
 
- case Act.INIT_COLOR:
- return Buzz.initColor(clone(model), act.bale, state);
+ case Act.INIT_FLUXGLOP:
+ return Buzz.initFluxGlop(clone(model), act.bale, state);
 
-case Act.OPEN_COLOR:
- return Buzz.openColor(clone(model), act.bale, state);
+case Act.READ_FLUXGLOP:
+ return Buzz.readFluxGlop(clone(model), act.bale, state);
 
-case Act.READ_COLOR:
- return Buzz.readColor(clone(model), act.bale, state);
+case Act.WRITE_FLUXGLOP:
+ return Buzz.writeFluxGlop(clone(model), act.bale, state);
 
-case Act.WRITE_COLOR:
- return Buzz.writeColor(clone(model), act.bale, state);
+case Act.REMOVE_FLUXGLOP:
+ return Buzz.removeFluxGlop(clone(model), act.bale, state);
 
-case Act.REMOVE_COLOR:
- return Buzz.removeColor(clone(model), act.bale, state);
+case Act.DELETE_FLUXGLOP:
+ return Buzz.deleteFluxGlop(clone(model), act.bale, state);
 
-case Act.DELETE_COLOR:
- return Buzz.deleteColor(clone(model), act.bale, state);
-
-case Act.CREATE_COLOR:
- return Buzz.createColor(clone(model), act.bale, state);
-
-case Act.LIST_COLOR:
- return Buzz.listColor(clone(model), act.bale, state);
-
-case Act.RANDOM_COLOR:
- return Buzz.randomColor(clone(model), act.bale, state);
-
-case Act.BASKET_COLOR:
- return Buzz.basketColor(clone(model), act.bale, state);
-
-case Act.ACCESS_COLOR:
- return Buzz.accessColor(clone(model), act.bale, state);
+case Act.CREATE_FLUXGLOP:
+ return Buzz.createFluxGlop(clone(model), act.bale, state);
 
  default:
  return model;
  }
 }
+
 import State from "../99.core/state";
 
-export default class ColorUnit {
+
+export default class FluxGlopUnit {
 
  constructor(state: State) {
  }
-}
-
-
-export default interface ColorBit {
- idx: string;
- hex?: string;
-}
-
-export default interface ColorBit {
-    idx: string;
-    src?: string;
-    val?: number;
-    dat?: any;
-    lst?: any[];
-    slv?: Function;
-}
-
-
-export default interface ColorBit {
-    idx: string;
-    src?: string;
-    val?: number;
-    dat?: any;
-    lst?: any[]
-    slv?: Function;
-}
-
-
-import  ColorBit  from "./color.bit";
-
-export default interface Color {
- // idx:string;
- // colorBitList: ColorBit[];
- // colorBits:any;
-
 }
 
 import * as ActCol from '../../97.collect.unit/collect.action';
@@ -20432,60 +19998,52 @@ export const RANDOM_TIME = "[Random action] Random Time";
 
 import Model from "./99.core/interface/model.interface";
 
-import glopsUnit from "./00.glops.unit/glops.unit";
-import WorldUnit from "./01.world.unit/world.unit";
-import FateUnit from "./02.fate.unit/fate.unit";
-import ColorUnit from "./03.color.unit/color.unit";
+import GlopsUnit from "./00.glops.unit/glops.unit";
+import FormGlopUnit from "./04.formGlop.unit/formGlop.unit";
+import FluxGlopUnit from "./05.fluxGlop.unit/fluxGlop.unit";
 import CollectUnit from "./97.collect.unit/collect.unit";
 import BusUnit from "./99.bus.unit/bus.unit";
 
 
 import Glops from "./00.glops.unit/fce/glops.interface";
 import { GlopsModel } from "./00.glops.unit/glops.model";
-import World from "./01.world.unit/fce/world.interface";
-import { WorldModel } from "./01.world.unit/world.model";
-import Fate from "./02.fate.unit/fce/fate.interface";
-import { FateModel } from "./02.fate.unit/fate.model";
-import Color from "./03.color.unit/fce/color.interface";
-import { ColorModel } from "./03.color.unit/color.model";
+import FormGlop from "./04.formGlop.unit/fce/formGlop.interface";
+import { FormGlopModel } from "./04.formGlop.unit/formGlop.model";
+import FluxGlop from "./05.fluxGlop.unit/fce/fluxGlop.interface";
+import { FluxGlopModel } from "./05.fluxGlop.unit/fluxGlop.model";
 import Collect from "./97.collect.unit/fce/collect.interface";
 import { CollectModel } from "./97.collect.unit/collect.model";
 import Bus from "./99.bus.unit/fce/bus.interface";
 import { BusModel } from "./99.bus.unit/bus.model";
 
 
-export const list: Array<any> = [glopsUnit,WorldUnit,FateUnit,ColorUnit,CollectUnit,BusUnit];
+export const list: Array<any> = [GlopsUnit,FormGlopUnit,FluxGlopUnit,CollectUnit,BusUnit];
 
-import * as reduceFromglops from "./00.glops.unit/glops.reduce";
-import * as reduceFromWorld from "./01.world.unit/world.reduce";
-import * as reduceFromFate from "./02.fate.unit/fate.reduce";
-import * as reduceFromColor from "./03.color.unit/color.reduce";
+import * as reduceFromGlops from "./00.glops.unit/glops.reduce";
+import * as reduceFromFormGlop from "./04.formGlop.unit/formGlop.reduce";
+import * as reduceFromFluxGlop from "./05.fluxGlop.unit/fluxGlop.reduce";
 import * as reduceFromCollect from "./97.collect.unit/collect.reduce";
 import * as reduceFromBus from "./99.bus.unit/bus.reduce";
 
 
 export const reducer: any = {
- glops : reduceFromglops.reducer,
- world : reduceFromWorld.reducer,
- fate : reduceFromFate.reducer,
- color : reduceFromColor.reducer,
-collect : reduceFromCollect.reducer,
-bus : reduceFromBus.reducer,
+ glops : reduceFromGlops.reducer, 
+formGlop : reduceFromFormGlop.reducer, 
+fluxGlop : reduceFromFluxGlop.reducer, 
+collect : reduceFromCollect.reducer, 
+bus : reduceFromBus.reducer, 
 
 };
 
 export default class UnitData implements Model {
-
-
+ 
  glops : Glops = new GlopsModel();
-
- world : World = new WorldModel();
- fate : Fate = new FateModel();
- color : Color = new ColorModel();
+formGlop : FormGlop = new FormGlopModel();
+fluxGlop : FluxGlop = new FluxGlopModel();
 collect : Collect = new CollectModel();
 bus : Bus = new BusModel();
 
-
+ 
 }
 
 var sim = {
@@ -35415,10 +34973,10 @@ export const updateMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
 
   lst = [
     ActLib.DEV_LIBRARY,
+    ActMnu.GLOPS_MENU,
     ActDif.UPDATE_DIFFUSION,
     ActSrv.UPDATE_SERVER,
     ActMnu.EARTH_MENU,
-    ActMnu.GLOPS_MENU,
     ActDat.FRAME_DATA,
     ActMnu.OLLAMA_MENU,
     ActMnu.CONTROL_MENU,
@@ -35434,6 +34992,11 @@ export const updateMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
   src = bit.chcBit.src;
 
   switch (src) {
+
+    case ActMnu.GLOPS_MENU:
+      
+      bit = await ste.hunt(ActMnu.GLOPS_MENU, {})
+      break;
 
 
     case ActSrv.UPDATE_SERVER:
@@ -35594,9 +35157,7 @@ export const updateMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
       bit = await ste.hunt(ActMnu.EARTH_MENU, {})
       break;
 
-    case ActMnu.GLOPS_MENU:
-      bit = await ste.hunt(ActMnu.GLOPS_MENU, {})
-      break;
+
 
     case ActLib.UPDATE_LIBRARY:
       ste.hunt(ActCns.UPDATE_CONSOLE, { idx: 'cns00', src: "Update Library Pivot" })
@@ -35976,27 +35537,27 @@ export const glopsMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
       if (global.GLOPS == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled glops" });
       if (global.GLOPS == null) global.GLOPS = GLOPS = require(path.resolve('./dist/020.glops/hunt'));
 
-      if (global.TIME == null) await new Promise<void>((resolve, reject) => exec('tsc -b 001.time', err => err ? reject(err) : resolve()));
+      //if (global.TIME == null) await new Promise<void>((resolve, reject) => exec('tsc -b 001.time', err => err ? reject(err) : resolve()));
 
-      if (global.TIME == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled time" });
-      if (global.TIME == null) TIME = global.TIME = require(path.resolve('./dist/001.time/hunt'));
-      if (window[PVT.TIME] == null) window[PVT.TIME] = TIME.hunt
+      //if (global.TIME == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled time" });
+      //if (global.TIME == null) TIME = global.TIME = require(path.resolve('./dist/001.time/hunt'));
+      //if (window[PVT.TIME] == null) window[PVT.TIME] = TIME.hunt
 
-      if (global.SPACE == null) await new Promise<void>((resolve, reject) => exec('tsc -b 002.space', err => err ? reject(err) : resolve()));
+      //if (global.SPACE == null) await new Promise<void>((resolve, reject) => exec('tsc -b 002.space', err => err ? reject(err) : resolve()));
 
-      if (global.SPACE == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled space" });
-      if (global.SPACE == null) SPACE = global.SPACE = require(path.resolve('./dist/002.space/hunt'));
-      if (window[PVT.SPACE] == null) window[PVT.SPACE] = SPACE.hunt
+      //if (global.SPACE == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled space" });
+      //if (global.SPACE == null) SPACE = global.SPACE = require(path.resolve('./dist/002.space/hunt'));
+      //if (window[PVT.SPACE] == null) window[PVT.SPACE] = SPACE.hunt
 
 
-      if (global.SOWER == null) await new Promise<void>((resolve, reject) => exec('tsc -b 010.sower', err => err ? reject(err) : resolve()));
+      //if (global.SOWER == null) await new Promise<void>((resolve, reject) => exec('tsc -b 010.sower', err => err ? reject(err) : resolve()));
 
-      if (global.SOWER == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled sower" });
-      if (global.SOWER == null) SOWER = global.SOWER = require(path.resolve('./dist/010.sower/hunt'));
-      if (window[PVT.SOWER] == null) window[PVT.SOWER] = SOWER.hunt
+      //if (global.SOWER == null) bit = await ste.hunt(ActMnu.PRINT_MENU, { src: "compiled sower" });
+      //if (global.SOWER == null) SOWER = global.SOWER = require(path.resolve('./dist/010.sower/hunt'));
+      //if (window[PVT.SOWER] == null) window[PVT.SOWER] = SOWER.hunt
 
-      lst = FS.readJsonSync('./public/data/color/000.color.name.json')
-      bit = await GLOPS.hunt(ActClr.OPEN_COLOR, { lst })
+      //lst = FS.readJsonSync('./public/data/color/000.color.name.json')
+      //bit = await GLOPS.hunt(ActClr.OPEN_COLOR, { lst })
 
     } catch (err) {
       console.error(`exec error: ${err}`);
@@ -36004,7 +35565,9 @@ export const glopsMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
     }
   })();
 
-  lst = [ ActGlp.UPDATE_GLOPS, ActGlp.ACCESS_GLOPS, ActGlp.OPEN_GLOPS, ActMnu.UPDATE_MENU]
+
+
+  lst = [ActGlp.UPDATE_GLOPS, ActGlp.ACCESS_GLOPS, ActGlp.OPEN_GLOPS, ActGlp.TEST_GLOPS, ActMnu.UPDATE_MENU]
 
   bit = await ste.hunt(ActGrd.UPDATE_GRID, { x: 0, y: 4, xSpan: 4, ySpan: 12 })
   bit = await ste.hunt(ActChc.OPEN_CHOICE, { dat: { clr0: Color.BLACK, clr1: Color.YELLOW }, src: Align.VERTICAL, lst, net: bit.grdBit.dat })
@@ -36023,6 +35586,11 @@ export const glopsMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
 
     case ActGlp.OPEN_GLOPS:
       bit = await GLOPS.hunt(ActGlp.OPEN_GLOPS, {})
+      bit = await ste.hunt(ActMnu.PRINT_MENU, bit)
+      break;
+
+    case ActGlp.TEST_GLOPS:
+      bit = await GLOPS.hunt(ActGlp.TEST_GLOPS, {})
       bit = await ste.hunt(ActMnu.PRINT_MENU, bit)
       break;
 
@@ -37380,17 +36948,18 @@ export { initMenu } from "./buz/00.menu.buzz";
 export { updateMenu } from "./buz/00.menu.buzz";
 export { testMenu } from "./buz/00.menu.buzz";
 export { closeMenu } from "./buz/00.menu.buzz";
-export { createMenu  } from "./buz/00.menu.buzz";
-export { printMenu  } from "./buz/00.menu.buzz";
-export { spaceMenu  } from "./buz/menu.space";
-export { earthMenu  } from "./buz/menu.earth";
-export { controlMenu  } from "./buz/menu.control";
-export { sowerMenu  } from "./buz/menu.sower";
-export { timeMenu  } from "./buz/menu.time";
-export { colorMenu  } from "./buz/sower/menu.color";
-export { fateMenu  } from "./buz/sower/menu.fate";
-export { beingMenu  } from "./buz/sower/menu.being";
-export { ollamaMenu  } from "./buz/menu.ollama";
+export { createMenu } from "./buz/00.menu.buzz";
+export { printMenu } from "./buz/00.menu.buzz";
+export { spaceMenu } from "./buz/menu.space";
+export { earthMenu } from "./buz/menu.earth";
+export { controlMenu } from "./buz/menu.control";
+export { sowerMenu } from "./buz/menu.sower";
+export { timeMenu } from "./buz/menu.time";
+export { colorMenu } from "./buz/sower/menu.color";
+export { fateMenu } from "./buz/sower/menu.fate";
+export { beingMenu } from "./buz/sower/menu.being";
+export { ollamaMenu } from "./buz/menu.ollama";
+export { glopsMenu } from "./buz/menu.glops";
 
 
 import Menu from "./fce/menu.interface";
@@ -37461,6 +37030,9 @@ export function reducer(model: MenuModel = new MenuModel(), act: Act.Actions, st
 
     case Act.BEING_MENU:
       return Buzz.beingMenu(clone(model), act.bale, state);
+
+    case Act.GLOPS_MENU:
+      return Buzz.glopsMenu(clone(model), act.bale, state);
 
     default:
       return model;
@@ -38170,6 +37742,7 @@ export const UPDATE_GLOPS = "[glops action] Update glops";
 export const ADVANCE_GLOPS = "[Advance action] Advance glops";
 export const OUTPUT_GLOPS = "[Output action] Output glops";
 export const ACCESS_GLOPS = "[Access action] Access glops";
+export const TEST_GLOPS = "[Test action] Test Glops";
 export const INIT_GRAPHIC = "[Graphic action] Init Graphic";
 export const UPDATE_GRAPHIC = "[Graphic action] Update Graphic";
 export const READ_GRAPHIC = "[Read action] Read Graphic";

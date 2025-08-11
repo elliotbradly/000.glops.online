@@ -1,11 +1,13 @@
-import * as ActSpk from "../../03.ratchetwrk.unit/ratchetwrk.action";
+import { RatchetwrkModel } from "../ratchetwrk.model";
+import RatchetwrkBit from "../fce/ratchetwrk.bit";
+import State from "../../99.core/state";
+import OrbBit from "../fce/orb.bit";
+
+
+import * as ActRwk from "../../06.ratchetwrk.unit/ratchetwrk.action";
 import * as ActCol from "../../97.collect.unit/collect.action";
 import * as ActBus from "../../99.bus.unit/bus.action";
 
-
-import * as ActVrt from "../../act/vurt.action"
-import * as ActDsk from "../../act/disk.action"
-import * as ActPvt from "../../act/pivot.action"
 
 
 var bit, val, idx, dex, lst, dat, src;
@@ -40,7 +42,7 @@ export const updateRatchetwrk = async (cpy: RatchetwrkModel, bal: RatchetwrkBit,
 export const readRatchetwrk = async (cpy: RatchetwrkModel, bal: RatchetwrkBit, ste: State) => {
 
     if (bal.idx == null) bal.idx = 'spk00';
-    bit = await ste.hunt(ActCol.READ_COLLECT, { idx: bal.idx, bit: ActSpk.CREATE_RATCHETWRK })
+    bit = await ste.hunt(ActCol.READ_COLLECT, { idx: bal.idx, bit: ActRwk.CREATE_RATCHETWRK })
 
     bal.slv({ spkBit: { idx: "read-ratchetwrk", dat: bit.clcBit.dat } });
     return cpy;
@@ -48,7 +50,7 @@ export const readRatchetwrk = async (cpy: RatchetwrkModel, bal: RatchetwrkBit, s
 
 export const writeRatchetwrk = async (cpy: RatchetwrkModel, bal: RatchetwrkBit, ste: State) => {
 
-    bit = await ste.hunt(ActCol.WRITE_COLLECT, { idx: bal.idx, src: bal.src, dat: bal.dat, bit: ActSpk.CREATE_RATCHETWRK })
+    bit = await ste.hunt(ActCol.WRITE_COLLECT, { idx: bal.idx, src: bal.src, dat: bal.dat, bit: ActRwk.CREATE_RATCHETWRK })
 
     if (bal.slv != null) bal.slv({ spkBit: { idx: "write-ratchetwrk", dat: bit.clcBit.dat } });
     return cpy;
@@ -70,7 +72,11 @@ export const deleteRatchetwrk = async (cpy: RatchetwrkModel, bal: RatchetwrkBit,
 
 
 
-import { RatchetwrkModel } from "../ratchetwrk.model";
-import RatchetwrkBit from "../fce/ratchetwrk.bit";
-import State from "../../99.core/state";
-import OrbBit from "../fce/orb.bit";
+export const testRatchetwrk = (cpy: RatchetwrkModel, bal:RatchetwrkBit, ste: State) => {
+ 
+    bal.slv({ rwkBit: { idx: "test-ratchetwrk" } });
+
+ return cpy;
+ };
+
+

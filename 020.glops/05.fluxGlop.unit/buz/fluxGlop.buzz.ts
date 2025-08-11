@@ -123,3 +123,8 @@ export const deleteFluxGlop = async (cpy: FluxGlopModel, bal: FluxGlopBit, ste: 
     debugger
     return cpy;
 };
+
+export const createFluxGlop = async (cpy: FluxGlopModel, bal: FluxGlopBit, ste: State) => {
+    debugger
+    return cpy;
+};

@@ -5,3 +5,4 @@ export { writeRatchetwrk  } from "./buz/ratchetwrk.buzz";
 export { removeRatchetwrk  } from "./buz/ratchetwrk.buzz";
 export { deleteRatchetwrk  } from "./buz/ratchetwrk.buzz";
 export { createRatchetwrk  } from "./buz/createRatchetwrk.buzz";
+export { testRatchetwrk  } from "./buz/ratchetwrk.buzz";

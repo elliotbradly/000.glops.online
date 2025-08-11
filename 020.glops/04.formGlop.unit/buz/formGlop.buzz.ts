@@ -173,6 +173,11 @@ export const deleteFormGlop = async (cpy: FormGlopModel, bal: FormGlopBit, ste: 
     return cpy;
 };
 
+export const createFormGlop = async (cpy: FormGlopModel, bal: FormGlopBit, ste: State) => {
+    debugger
+    return cpy;
+};
+
 
 
 
