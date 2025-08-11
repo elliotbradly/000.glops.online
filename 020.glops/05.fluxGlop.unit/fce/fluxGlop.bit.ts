@@ -1,4 +1,4 @@
-export default interface FormGlopBit {
+export default interface FluxGlopBit {
     idx: string;
     src?: string;
     val?: number;
