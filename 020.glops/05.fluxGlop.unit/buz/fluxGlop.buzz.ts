@@ -26,7 +26,49 @@ export const updateFluxGlop = async (cpy: FluxGlopModel, bal: FluxGlopBit, ste: 
     const crystalBonus = bal.crystalBonus || 0;
     const fleetBoostBonus = bal.fleetBoostBonus || 0;
     const implantBonus = bal.implantBonus || 0;
-    const cycleTime = bal.cycleTime || 1;
+
+    // Cycle Time Calculation
+    const baseCycleTime = bal.baseCycleTime || 180; // Default to a reasonable base cycle time
+    let cycleTimeModifier = 1.0;
+
+    // Ship Hulls
+    if (bal.shipHull === "Retriever") {
+        cycleTimeModifier *= 0.5;
+    } else if (bal.shipHull === "Mackinaw") {
+        cycleTimeModifier *= 0.25;
+    } else if (bal.shipHull === "Hulk" && bal.exhumersLvl) {
+        cycleTimeModifier *= (1 - 0.02 * bal.exhumersLvl);
+    }
+
+    // Fleet Support (Command Bursts) - Simplified
+    // The exact formula is complex and depends on many factors not available here.
+    // This is a simplified placeholder.
+    if (bal.hasMiningForemanBurst) {
+        // Assuming a generic 10% bonus for having a foreman burst.
+        // A real implementation would need more details on skills and charges.
+        cycleTimeModifier *= 0.90;
+    }
+
+    // Thermodynamics (Overheating)
+    if (bal.isOverheating) {
+        cycleTimeModifier *= 0.85; // Approximately 15% reduction
+    }
+
+    // Character Skills (Ice Harvesting Only)
+    // Note: The logic for checking if we are mining ice is not present.
+    // This bonus is applied generally for now.
+    if (bal.iceHarvestingLvl) {
+        cycleTimeModifier *= (1 - 0.05 * bal.iceHarvestingLvl);
+    }
+
+    // Mining Crystals
+    if (bal.miningCrystalType === "Tech I") {
+        cycleTimeModifier *= 1.25;
+    } else if (bal.miningCrystalType === "Tech II") {
+        cycleTimeModifier *= 1.50;
+    }
+
+    const cycleTime = baseCycleTime * cycleTimeModifier;
 
     const skillBonus = (1 + miningLvl * 0.05) * (1 + astrogeologyLvl * 0.05);
 
