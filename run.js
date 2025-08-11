@@ -61,7 +61,9 @@ const init = async (prt) => {
 
     LIBRARY = require(path.resolve('./dist/995.library/hunt'));
     LIBRARY_ACTION = require(path.resolve('./dist/995.library/00.library.unit/library.action'));
-    await LIBRARY.hunt(LIBRARY_ACTION.INIT_LIBRARY, { val: 1, dat: MQTT, src: [localBit] });
+    await LIBRARY.hunt(LIBRARY_ACTION.INIT_LIBRARY, { val: 1, dat: null, src: null });
+
+//    await LIBRARY.hunt(LIBRARY_ACTION.INIT_LIBRARY, { val: 1, dat: MQTT, src: [localBit] });
 
     //LIBRARY = require(path.resolve('./dist/995.library/hunt'));
     //LIBRARY_ACTION = require(path.resolve('./dist/995.library/00.library.unit/library.action'));
@@ -129,7 +131,7 @@ function launchBatchFile(userInputPath) {
     console.log('Batch file launched!');
 }
 
-launchBatchFile(process.env.MQTT_BAT);
+//launchBatchFile(process.env.MQTT_BAT);
 
 
 //const init = async () => {

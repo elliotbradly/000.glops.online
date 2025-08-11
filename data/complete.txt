@@ -18908,6 +18908,346 @@ export default class FluxGlopUnit {
  }
 }
 
+import { RatchetwrkModel } from "../ratchetwrk.model";
+import RatchetwrkBit from "../fce/ratchetwrk.bit";
+import State from "../../99.core/state";
+import OrbBit from "../fce/orb.bit";
+
+//import * as ActClr from "../../../000.earth/03.color.unit/color.action";
+import * as ActRwk from "../../06.ratchetwrk.unit/ratchetwrk.action";
+import * as ActCol from "../../97.collect.unit/collect.action";
+import * as ActBus from "../../99.bus.unit/bus.action";
+
+
+import EtherealBit from "../fce/talent/etheric.bit";
+
+var bit, val, idx, dex, lst, dat, src;
+
+export const createRatchetwrk = async (cpy: RatchetwrkModel, bal: RatchetwrkBit, ste: State) => {
+
+    var dat: OrbBit = { idx: bal.idx, src: bal.src }
+
+    var etri:EtherealBit = { bliyte:null, grusit:null, flxuow:null, kldadu:null };
+    dat.bit = etri;
+
+  //  bit = await ste.hunt( ActClr.BASKET_COLOR, {})
+  //  dat.bit.bliyte = bit.clrBit.dat
+
+  //  bit = await ste.hunt( ActClr.BASKET_COLOR, {})
+  //  dat.bit.flxuow = bit.clrBit.dat
+
+  //  bit = await ste.hunt( ActClr.BASKET_COLOR, {})
+  //  dat.bit.grusit = bit.clrBit.dat
+
+  //  bit = await ste.hunt( ActClr.BASKET_COLOR, {})
+  //  dat.bit.kldadu = bit.clrBit.dat
+
+    dat
+
+    bal.slv({ spkBit: { idx: "create-ratchetwrk", dat } });
+
+    return cpy;
+};
+
+import { RatchetwrkModel } from "../ratchetwrk.model";
+import RatchetwrkBit from "../fce/ratchetwrk.bit";
+import State from "../../99.core/state";
+import OrbBit from "../fce/orb.bit";
+
+
+import * as ActRwk from "../../06.ratchetwrk.unit/ratchetwrk.action";
+import * as ActCol from "../../97.collect.unit/collect.action";
+import * as ActBus from "../../99.bus.unit/bus.action";
+
+
+
+var bit, val, idx, dex, lst, dat, src;
+
+export const initRatchetwrk = async (cpy: RatchetwrkModel, bal: RatchetwrkBit, ste: State) => {
+
+    //set up colors
+    //src = '000.color.name.json'
+    //bit = await ste.bus(ActDsk.READ_DISK, { src: './data/color-list/' + src })
+    //var colorList = bit.dskBit.dat;
+
+    //lst = JSON.parse(colorList)
+
+    //bit = await ste.bus(ActClr.WRITE_COLOR, { idx: 'clr00', dat: { lst } });
+
+    //var staveDataLoc = './data/stave/'
+    //src = staveDataLoc + '002.genisi.txt';
+
+    //bit = await ste.bus(ActStv.WRITE_STAVE, { src });
+
+    bal.slv({ intBit: { idx: "init-ratchetwrk" } });
+
+    return cpy;
+};
+
+
+export const updateRatchetwrk = async (cpy: RatchetwrkModel, bal: RatchetwrkBit, ste: State) => {
+    return cpy;
+};
+
+
+export const readRatchetwrk = async (cpy: RatchetwrkModel, bal: RatchetwrkBit, ste: State) => {
+
+    if (bal.idx == null) bal.idx = 'spk00';
+    bit = await ste.hunt(ActCol.READ_COLLECT, { idx: bal.idx, bit: ActRwk.CREATE_RATCHETWRK })
+
+    bal.slv({ spkBit: { idx: "read-ratchetwrk", dat: bit.clcBit.dat } });
+    return cpy;
+};
+
+export const writeRatchetwrk = async (cpy: RatchetwrkModel, bal: RatchetwrkBit, ste: State) => {
+
+    bit = await ste.hunt(ActCol.WRITE_COLLECT, { idx: bal.idx, src: bal.src, dat: bal.dat, bit: ActRwk.CREATE_RATCHETWRK })
+
+    if (bal.slv != null) bal.slv({ spkBit: { idx: "write-ratchetwrk", dat: bit.clcBit.dat } });
+    return cpy;
+};
+
+
+
+export const removeRatchetwrk = async (cpy: RatchetwrkModel, bal: RatchetwrkBit, ste: State) => {
+    debugger
+    return cpy;
+};
+
+
+export const deleteRatchetwrk = async (cpy: RatchetwrkModel, bal: RatchetwrkBit, ste: State) => {
+    debugger
+    return cpy;
+};
+
+
+
+
+export const testRatchetwrk = (cpy: RatchetwrkModel, bal:RatchetwrkBit, ste: State) => {
+ 
+    bal.slv({ rwkBit: { idx: "test-ratchetwrk" } });
+
+ return cpy;
+ };
+
+
+
+import EthericBit from "./talent/etheric.bit";
+
+export default interface OrbBit {
+ idx:string;
+ src?:string;
+ bit?:EthericBit
+}
+
+
+export default interface RatchetwrkBit {
+    idx: string;
+    src?: string;
+    val?: number;
+    dat?: any;
+    slv?: Function;
+    bit?: any;
+    lst?: any[];
+}
+
+import  RatchetwrkBit  from "./ratchetwrk.bit";
+
+export default interface Ratchetwrk {
+ // idx:string;
+ // ratchetwrkBitList: RatchetwrkBit[];
+ // ratchetwrkBits:any;
+
+}
+
+
+export default interface AuthenticBit {
+    direction: string;
+    purpose: string;
+    cohesion: string;
+}
+
+
+export default interface CapacitiveBit {
+    cognition: string;
+    vocabulary: string;
+    reminiscence: string;
+}
+
+
+export default interface EthericBit {
+    bliyte: string;
+    grusit: string;
+    flxuow: string;
+    kldadu: string
+}
+
+
+export default interface ImaginativeBit {
+    style: string;
+    ingenuity: string;
+    vision: string;
+}
+
+
+export default interface LegitimateBit {
+    fidelity: string;
+    recognition: string;
+    sovereignty: string;
+}
+
+
+export default interface PivotalBit {
+    contribution: string;
+    gravity: string;
+    providence: string;
+}
+
+
+export default interface ReactiveBit {
+    discernment: string;
+    impulse: string;
+    sensation: string;
+}
+
+
+export default interface SignificantBit {
+    force: string;
+    charge: string;
+    scale: string;
+}
+
+
+export default interface VigorousBit {
+    pizazz: string;
+    oomph: string;
+    zing: string;
+}
+
+import { Action } from "../99.core/interface/action.interface";
+import  RatchetwrkBit  from "./fce/ratchetwrk.bit";
+
+// Ratchetwrk actions
+
+export const INIT_RATCHETWRK = "[Ratchetwrk action] Init Ratchetwrk";
+export class InitRatchetwrk implements Action {
+ readonly type = INIT_RATCHETWRK;
+ constructor(public bale: RatchetwrkBit) {}
+}
+
+export const UPDATE_RATCHETWRK = "[Ratchetwrk action] Update Ratchetwrk";
+export class UpdateRatchetwrk implements Action {
+ readonly type = UPDATE_RATCHETWRK;
+ constructor(public bale: RatchetwrkBit) {}
+}
+
+export const READ_RATCHETWRK = "[Read action] Read Ratchetwrk";
+ export class ReadRatchetwrk implements Action {
+ readonly type = READ_RATCHETWRK;
+ constructor(public bale: RatchetwrkBit) {}
+ }
+
+export const WRITE_RATCHETWRK = "[Write action] Write Ratchetwrk";
+ export class WriteRatchetwrk implements Action {
+ readonly type = WRITE_RATCHETWRK;
+ constructor(public bale: RatchetwrkBit) {}
+ }
+
+export const REMOVE_RATCHETWRK = "[Remove action] Remove Ratchetwrk";
+ export class RemoveRatchetwrk implements Action {
+ readonly type = REMOVE_RATCHETWRK;
+ constructor(public bale: RatchetwrkBit) {}
+ }
+
+export const DELETE_RATCHETWRK = "[Delete action] deleteRatchetwrk";
+ export class DeleteRatchetwrk implements Action {
+ readonly type = DELETE_RATCHETWRK;
+ constructor(public bale: RatchetwrkBit) {}
+ }
+
+export const CREATE_RATCHETWRK = "[Create action] Create Ratchetwrk";
+ export class CreateRatchetwrk implements Action {
+ readonly type = CREATE_RATCHETWRK;
+ constructor(public bale: RatchetwrkBit) {}
+ }
+
+export const TEST_RATCHETWRK = "[Test action] Test Ratchetwrk";
+ export class TestRatchetwrk implements Action {
+ readonly type = TEST_RATCHETWRK;
+ constructor(public bale: RatchetwrkBit) {}
+ }
+ 
+export type Actions = | InitRatchetwrk | UpdateRatchetwrk
+| ReadRatchetwrk
+| WriteRatchetwrk
+| RemoveRatchetwrk
+| DeleteRatchetwrk
+| CreateRatchetwrk
+| TestRatchetwrk
+export { initRatchetwrk  } from "./buz/ratchetwrk.buzz";
+export { updateRatchetwrk  } from "./buz/ratchetwrk.buzz";
+export { readRatchetwrk  } from "./buz/ratchetwrk.buzz";
+export { writeRatchetwrk  } from "./buz/ratchetwrk.buzz";
+export { removeRatchetwrk  } from "./buz/ratchetwrk.buzz";
+export { deleteRatchetwrk  } from "./buz/ratchetwrk.buzz";
+export { createRatchetwrk  } from "./buz/createRatchetwrk.buzz";
+export { testRatchetwrk  } from "./buz/ratchetwrk.buzz";
+import Ratchetwrk from "./fce/ratchetwrk.interface";
+import RatchetwrkBit from "./fce/ratchetwrk.interface";
+
+export class RatchetwrkModel implements Ratchetwrk {
+ //idx:string;
+ //ratchetwrkBitList: RatchetwrkBit[] = [];
+ //ratchetwrkBits: any = {};
+}
+
+import * as clone from "clone-deep";
+import * as Act from "./ratchetwrk.action";
+import { RatchetwrkModel } from "./ratchetwrk.model";
+import * as Buzz from "./ratchetwrk.buzzer";
+import State from "../99.core/state";
+
+export function reducer(model: RatchetwrkModel = new RatchetwrkModel(), act: Act.Actions,  state?: State ) {
+ switch (act.type) {
+
+ case Act.UPDATE_RATCHETWRK:
+ return Buzz.updateRatchetwrk(clone(model), act.bale, state);
+
+ case Act.INIT_RATCHETWRK:
+ return Buzz.initRatchetwrk(clone(model), act.bale, state);
+
+case Act.READ_RATCHETWRK:
+ return Buzz.readRatchetwrk(clone(model), act.bale, state);
+
+case Act.WRITE_RATCHETWRK:
+ return Buzz.writeRatchetwrk(clone(model), act.bale, state);
+
+case Act.REMOVE_RATCHETWRK:
+ return Buzz.removeRatchetwrk(clone(model), act.bale, state);
+
+case Act.DELETE_RATCHETWRK:
+ return Buzz.deleteRatchetwrk(clone(model), act.bale, state);
+
+case Act.CREATE_RATCHETWRK:
+ return Buzz.createRatchetwrk(clone(model), act.bale, state);
+
+case Act.TEST_RATCHETWRK:
+ return Buzz.testRatchetwrk(clone(model), act.bale, state);
+ 
+ default:
+ return model;
+ }
+}
+
+import State from "../99.core/state";
+
+
+export default class RatchetwrkUnit {
+
+ constructor(state: State) {
+ }
+}
+
 import * as ActCol from '../../97.collect.unit/collect.action';
 
 import { CollectModel } from '../collect.model';
@@ -20001,6 +20341,7 @@ import Model from "./99.core/interface/model.interface";
 import GlopsUnit from "./00.glops.unit/glops.unit";
 import FormGlopUnit from "./04.formGlop.unit/formGlop.unit";
 import FluxGlopUnit from "./05.fluxGlop.unit/fluxGlop.unit";
+import RatchetwrkUnit from "./06.ratchetwrk.unit/ratchetwrk.unit";
 import CollectUnit from "./97.collect.unit/collect.unit";
 import BusUnit from "./99.bus.unit/bus.unit";
 
@@ -20011,17 +20352,20 @@ import FormGlop from "./04.formGlop.unit/fce/formGlop.interface";
 import { FormGlopModel } from "./04.formGlop.unit/formGlop.model";
 import FluxGlop from "./05.fluxGlop.unit/fce/fluxGlop.interface";
 import { FluxGlopModel } from "./05.fluxGlop.unit/fluxGlop.model";
+import Ratchetwrk from "./06.ratchetwrk.unit/fce/ratchetwrk.interface";
+import { RatchetwrkModel } from "./06.ratchetwrk.unit/ratchetwrk.model";
 import Collect from "./97.collect.unit/fce/collect.interface";
 import { CollectModel } from "./97.collect.unit/collect.model";
 import Bus from "./99.bus.unit/fce/bus.interface";
 import { BusModel } from "./99.bus.unit/bus.model";
 
 
-export const list: Array<any> = [GlopsUnit,FormGlopUnit,FluxGlopUnit,CollectUnit,BusUnit];
+export const list: Array<any> = [GlopsUnit,FormGlopUnit,FluxGlopUnit,RatchetwrkUnit,CollectUnit,BusUnit];
 
 import * as reduceFromGlops from "./00.glops.unit/glops.reduce";
 import * as reduceFromFormGlop from "./04.formGlop.unit/formGlop.reduce";
 import * as reduceFromFluxGlop from "./05.fluxGlop.unit/fluxGlop.reduce";
+import * as reduceFromRatchetwrk from "./06.ratchetwrk.unit/ratchetwrk.reduce";
 import * as reduceFromCollect from "./97.collect.unit/collect.reduce";
 import * as reduceFromBus from "./99.bus.unit/bus.reduce";
 
@@ -20030,6 +20374,7 @@ export const reducer: any = {
  glops : reduceFromGlops.reducer, 
 formGlop : reduceFromFormGlop.reducer, 
 fluxGlop : reduceFromFluxGlop.reducer, 
+ratchetwrk : reduceFromRatchetwrk.reducer, 
 collect : reduceFromCollect.reducer, 
 bus : reduceFromBus.reducer, 
 
@@ -20040,6 +20385,7 @@ export default class UnitData implements Model {
  glops : Glops = new GlopsModel();
 formGlop : FormGlop = new FormGlopModel();
 fluxGlop : FluxGlop = new FluxGlopModel();
+ratchetwrk : Ratchetwrk = new RatchetwrkModel();
 collect : Collect = new CollectModel();
 bus : Bus = new BusModel();
 
@@ -35505,6 +35851,7 @@ const path = require('path');
 var exec = require('child_process').exec;
 
 import * as ActGlp from "../../act/glops.action";
+import * as ActRwk from "../../act/ratchetwrk.action";
 
 import { MenuModel } from "../menu.model";
 import MenuBit from "../fce/menu.bit";
@@ -35567,7 +35914,7 @@ export const glopsMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
 
 
 
-  lst = [ActGlp.UPDATE_GLOPS, ActGlp.ACCESS_GLOPS, ActGlp.OPEN_GLOPS, ActGlp.TEST_GLOPS, ActMnu.UPDATE_MENU]
+  lst = [ActGlp.UPDATE_GLOPS, ActGlp.ACCESS_GLOPS, ActGlp.OPEN_GLOPS, ActRwk.TEST_RATCHETWRK, ActGlp.TEST_GLOPS, ActMnu.UPDATE_MENU]
 
   bit = await ste.hunt(ActGrd.UPDATE_GRID, { x: 0, y: 4, xSpan: 4, ySpan: 12 })
   bit = await ste.hunt(ActChc.OPEN_CHOICE, { dat: { clr0: Color.BLACK, clr1: Color.YELLOW }, src: Align.VERTICAL, lst, net: bit.grdBit.dat })
@@ -35591,6 +35938,11 @@ export const glopsMenu = async (cpy: MenuModel, bal: MenuBit, ste: State) => {
 
     case ActGlp.TEST_GLOPS:
       bit = await GLOPS.hunt(ActGlp.TEST_GLOPS, {})
+      bit = await ste.hunt(ActMnu.PRINT_MENU, bit)
+      break;
+
+    case ActRwk.TEST_RATCHETWRK:
+      bit = await GLOPS.hunt(ActRwk.TEST_RATCHETWRK, {})
       bit = await ste.hunt(ActMnu.PRINT_MENU, bit)
       break;
 
@@ -37848,6 +38200,14 @@ export const DELETE_PRIMAL = "[Delete action] Delete Primal";
 export const CREATE_PRIMAL = "[Create action] Create Primal";
 export const INIT_PROGRESS = "[Progress action] Init Progress";
 export const UPDATE_PROGRESS = "[Progress action] Update Progress";
+export const INIT_RATCHETWRK = "[Ratchetwrk action] Init Ratchetwrk";
+export const UPDATE_RATCHETWRK = "[Ratchetwrk action] Update Ratchetwrk";
+export const READ_RATCHETWRK = "[Read action] Read Ratchetwrk";
+export const WRITE_RATCHETWRK = "[Write action] Write Ratchetwrk";
+export const REMOVE_RATCHETWRK = "[Remove action] Remove Ratchetwrk";
+export const DELETE_RATCHETWRK = "[Delete action] deleteRatchetwrk";
+export const CREATE_RATCHETWRK = "[Create action] Create Ratchetwrk";
+export const TEST_RATCHETWRK = "[Test action] Test Ratchetwrk";
 export const INIT_RENPY = "[Renpy action] Init Renpy";
 export const UPDATE_RENPY = "[Renpy action] Update Renpy";
 export const OPEN_RENPY = "[Renpy action] Open Renpy";
