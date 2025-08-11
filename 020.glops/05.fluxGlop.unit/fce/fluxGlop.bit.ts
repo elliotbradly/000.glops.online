@@ -14,4 +14,16 @@ export default interface FluxGlopBit {
     fleetBoostBonus?: number;
     implantBonus?: number;
     cycleTime?: number;
+    //New Properties for cycle time calculation
+    shipHull?: string;
+    exhumersLvl?: number;
+    hasMiningForemanBurst?: boolean;
+    miningForemanCharge?: string;
+    boosterSkills?: { miningForeman: number, miningDirector: number };
+    boosterShip?: string;
+    isRorqualIndustrialCoreActive?: boolean;
+    isOverheating?: boolean;
+    iceHarvestingLvl?: number;
+    miningCrystalType?: string;
+    baseCycleTime?: number;
 }
