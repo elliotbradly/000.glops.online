@@ -1,4 +1,4 @@
-import Scene from '../../ui/002.Scene';
+import Play from '../../ui/002.Play';
 
 /**
  * The main page component that renders the HomePage component.
@@ -7,7 +7,7 @@ import Scene from '../../ui/002.Scene';
  */
 const Page = () => {
     
-    return <Scene />;
+    return <Play />;
 };
 
 export default Page;

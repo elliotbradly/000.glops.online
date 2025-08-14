@@ -1,16 +1,15 @@
 import IndexPage from '../page/000.index/page';
-import TitlePage from '../page/001.title/page';
-import ScenePage from '../page/002.scene/page';
-import StationPage from '../page/005.station/page';
 
+import TitlePage from '../page/001.title/page';
+import PlayPage from '../page/002.play/page';
 import TestPage from '../page/003.test/000.index/page';
+
 import TestSolidPage from '../page/003.test/009.solid-test/page';
 import TestEarthPage from '../page/003.test/008.earth-test/page';
 import TestControlPage from '../page/003.test/007.control-test/page';
 import TestSpacePage from '../page/003.test/005.space-test/page';
 import TestTimePage from '../page/003.test/006.time-test/page';
 
-import PlayPage from '../page/004.play/page';
 
 import {
     Link,
@@ -64,15 +63,7 @@ const titleRoute = createRoute({
     },
 });
 
-const sceneRoute = createRoute({
-    getParentRoute: () => rootRoute,
-    path: "/scene",
-    component: function Lora() {
-        return (
-            <ScenePage />
-        );
-    },
-});
+
 
 const testRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -152,17 +143,6 @@ const playRoute = createRoute({
 });
 
 
-const stationRoute = createRoute({
-    getParentRoute: () => rootRoute,
-    path: "/station",
-    component: function Lora() {
-        return (
-            <StationPage />
-        );
-    },
-});
-
-
 
 
 export var RouteTree = () => {
@@ -170,16 +150,13 @@ export var RouteTree = () => {
     var item = rootRoute.addChildren([
         indexRoute,
         titleRoute,
-        sceneRoute,
         testRoute,
         testSolidRoute,
         testEarthRoute,
         testControlRoute,
         testSpaceRoute,
         testTimeRoute,
-        playRoute,
-        stationRoute,
-
+        playRoute
     ]);
 
     return item
