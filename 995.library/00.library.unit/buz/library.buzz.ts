@@ -38,11 +38,11 @@ export const initLibrary = async (cpy: LibraryModel, bal: LibraryBit, ste: State
 
     if (bal.dat != null) bit = await ste.hunt(ActBus.INIT_BUS, { idx: cpy.idx, lst: [ActLib, ActOlm, ActPmt] , dat: bal.dat, src: bal.src })
     
-    setInterval( async ()=>{
+    //setInterval( async ()=>{
 
-        ste.bus("[Open action] Open Pixel", {})
+     //   ste.bus("[Open action] Open Pixel", {})
 
-    }, 4444 )
+    //}, 4444 )
 
     //if (bal.val == 1) patch(ste, ActMnu.INIT_MENU, bal);
     patch(ste, ActMnu.INIT_MENU, bal);
